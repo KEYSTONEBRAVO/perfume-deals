@@ -11,6 +11,10 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
+<script>
+  // apply the saved theme before first paint (no flash)
+  try { const t = localStorage.getItem("kos_theme"); if (t === "light" || t === "dark") document.documentElement.dataset.theme = t; } catch {}
+</script>
 <style>
 :root{
   color-scheme:dark;
@@ -20,64 +24,66 @@
   --radius:14px;
 }
 @media (prefers-color-scheme: light){
-  :root{color-scheme:light;
+  :root:where(:not([data-theme="dark"])){color-scheme:light;
     --bg:#f2f2f0; --surface-1:#fcfcfb; --surface-2:#ececea; --line:#e0dfdb;
     --text-primary:#0b0b0b; --text-secondary:#52514e; --text-muted:#7a7974;
     --series-1:#2a78d6; --sale:#e34948; --good:#008300; --new:#2a78d6; --gold:#b98500;}
 }
+:root[data-theme="light"]{color-scheme:light;
+    --bg:#f2f2f0; --surface-1:#fcfcfb; --surface-2:#ececea; --line:#e0dfdb;
+    --text-primary:#0b0b0b; --text-secondary:#52514e; --text-muted:#7a7974;
+    --series-1:#2a78d6; --sale:#e34948; --good:#008300; --new:#2a78d6; --gold:#b98500;}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;background:var(--bg);color:var(--text-primary);
   font:15px/1.35 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
 button,select,input{font:inherit;color:inherit}
-header{position:sticky;top:0;z-index:5;background:var(--bg);
-  padding:calc(env(safe-area-inset-top) + 12px) 16px 8px}
-h1{font-size:22px;margin:0}
+header{position:sticky;top:0;z-index:5;background:var(--bg);padding:calc(env(safe-area-inset-top) + 10px) 16px 8px}
+.top{display:flex;align-items:center;gap:8px}
+h1{font-size:22px;margin:0;flex:1}
+.icon-btn{width:38px;height:38px;border-radius:12px;border:1px solid var(--line);background:var(--surface-1);cursor:pointer;font-size:17px}
 .sub{font-size:12px;color:var(--text-muted)}
+.seg{display:flex;background:var(--surface-2);border-radius:12px;padding:3px;margin-top:10px}
+.seg button{flex:1;border:0;background:none;padding:7px 0;border-radius:9px;font-size:14px;color:var(--text-secondary);cursor:pointer}
+.seg button.on{background:var(--surface-1);color:var(--text-primary);font-weight:700;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.offline{display:none;margin-top:6px;font-size:12px;color:var(--gold)}
 main{padding:0 12px calc(84px + env(safe-area-inset-bottom))}
 .view{display:none}.view.on{display:block}
 
-/* filters */
-.search{width:100%;margin-top:10px;padding:10px 14px;border-radius:12px;border:1px solid var(--line);
-  background:var(--surface-1);outline:none}
+.search{width:100%;margin-top:10px;padding:10px 14px;border-radius:12px;border:1px solid var(--line);background:var(--surface-1);outline:none}
 .chips{display:flex;gap:6px;overflow-x:auto;padding:8px 0 2px;scrollbar-width:none}
 .chips::-webkit-scrollbar{display:none}
-.chip{flex:none;padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface-1);
-  font-size:13px;color:var(--text-secondary);cursor:pointer}
+.chip{flex:none;padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface-1);font-size:13px;color:var(--text-secondary);cursor:pointer}
 .chip.on{background:var(--text-primary);color:var(--bg);border-color:var(--text-primary)}
 .row{display:flex;gap:6px;padding-top:6px}
 .row select{flex:1;min-width:0;padding:7px 8px;border-radius:10px;border:1px solid var(--line);background:var(--surface-1);font-size:13px}
 .count{font-size:12px;color:var(--text-muted);padding:8px 4px 4px}
 
-/* product cards */
 .card{display:flex;gap:12px;background:var(--surface-1);border-radius:var(--radius);padding:10px;margin:8px 0;cursor:pointer;position:relative}
 .card img,.ph{width:76px;height:76px;object-fit:contain;border-radius:10px;background:#fff;flex:none}
-.card .body{flex:1;min-width:0}
+.card .body{flex:1;min-width:0;padding-right:28px}
 .brand{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted)}
 .name{font-weight:700;font-size:15px;margin:1px 0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .kind{font-size:12px;color:var(--text-secondary)}
 .prices{margin-top:4px;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
 .price{font-weight:700;font-size:16px}
 .old{color:var(--text-muted);text-decoration:line-through;font-size:13px}
+.per{font-size:11px;color:var(--text-muted)}
 .tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:4px}
 .tag{font-size:11px;font-weight:700;padding:2px 7px;border-radius:999px;border:1px solid var(--line);color:var(--text-secondary)}
 .tag.sale{background:var(--sale);border-color:var(--sale);color:#fff}
 .tag.new{background:var(--new);border-color:var(--new);color:#fff}
 .tag.low{border-color:var(--good);color:var(--good)}
 .tag.out{color:var(--text-muted)}
-.star{position:absolute;top:6px;right:6px;width:36px;height:36px;border:0;background:none;font-size:20px;
-  color:var(--text-muted);cursor:pointer}
+.star{position:absolute;top:6px;right:6px;width:36px;height:36px;border:0;background:none;font-size:20px;color:var(--text-muted);cursor:pointer}
 .star.on{color:var(--gold)}
 .more{display:block;width:100%;margin:10px 0;padding:12px;border-radius:12px;border:1px solid var(--line);background:var(--surface-1);cursor:pointer}
 .empty{text-align:center;color:var(--text-muted);padding:40px 16px}
 
-/* bottom nav */
-nav{position:fixed;left:0;right:0;bottom:0;z-index:6;display:flex;background:var(--surface-1);border-top:1px solid var(--line);
-  padding-bottom:env(safe-area-inset-bottom)}
+nav{position:fixed;left:0;right:0;bottom:0;z-index:6;display:flex;background:var(--surface-1);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
 nav button{flex:1;border:0;background:none;padding:10px 0 8px;font-size:11px;color:var(--text-muted);cursor:pointer}
 nav button b{display:block;font-size:20px;line-height:1.1;font-weight:400}
 nav button.on{color:var(--text-primary)}
 
-/* stats */
 .tiles{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
 .tile{background:var(--surface-1);border-radius:var(--radius);padding:12px}
 .tile .v{font-size:26px;font-weight:700}
@@ -87,46 +93,63 @@ nav button.on{color:var(--text-primary)}
 .panel .sub{margin-bottom:8px}
 .bars{display:grid;grid-template-columns:auto 1fr auto;gap:6px 8px;align-items:center;font-size:13px}
 .bars .lbl{color:var(--text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px}
-.bars .track{height:14px;position:relative}
+.bars .track{height:14px}
 .bars .bar{height:14px;background:var(--series-1);border-radius:0 4px 4px 0;min-width:2px}
 .bars .val{color:var(--text-primary);font-variant-numeric:tabular-nums}
-.bars .hit{display:contents;cursor:default}
+.bars .hit{display:contents}
 .bars .hit:hover .bar,.bars .hit:focus .bar{filter:brightness(1.25)}
 .mini{display:flex;justify-content:space-between;gap:8px;padding:8px 0;border-top:1px solid var(--line);cursor:pointer;font-size:13px}
 .mini:first-of-type{border-top:0}
 .mini .r{font-weight:700;white-space:nowrap}
+.btn{display:block;text-align:center;margin-top:12px;padding:12px;border-radius:12px;background:var(--text-primary);color:var(--bg);text-decoration:none;font-weight:700;border:0;width:100%;cursor:pointer}
+.btn2{display:block;text-align:center;background:var(--surface-2);color:var(--text-primary);border:0;width:100%;margin-top:8px;padding:12px;border-radius:12px;cursor:pointer;text-decoration:none}
 
-/* detail sheet */
 .sheet-bg{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9;display:none}
-.sheet{position:fixed;left:0;right:0;bottom:0;z-index:10;background:var(--surface-1);border-radius:18px 18px 0 0;
-  max-height:92vh;overflow:auto;padding:12px 16px calc(20px + env(safe-area-inset-bottom));transform:translateY(100%);visibility:hidden;transition:transform .22s,visibility 0s .22s}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:10;background:var(--surface-1);border-radius:18px 18px 0 0;max-height:92vh;overflow:auto;
+  padding:12px 16px calc(20px + env(safe-area-inset-bottom));transform:translateY(100%);visibility:hidden;transition:transform .22s,visibility 0s .22s}
 .sheet.on{transform:none;visibility:visible;transition:transform .22s}.sheet-bg.on{display:block}
 .grab{width:40px;height:4px;border-radius:2px;background:var(--line);margin:0 auto 10px}
-.sheet .hero{display:flex;gap:14px;align-items:center}
-.sheet .hero img{width:110px;height:110px;object-fit:contain;background:#fff;border-radius:12px}
-.facts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}
+.hero{display:flex;gap:14px;align-items:center}
+.hero img{width:110px;height:110px;object-fit:contain;background:#fff;border-radius:12px}
+.hero .name{white-space:normal}
+.sizes{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0 4px}
+.size{border:1px solid var(--line);background:var(--surface-2);border-radius:10px;padding:6px 10px;cursor:pointer;text-align:left;font-size:13px}
+.size.on{border-color:var(--text-primary)}
+.size small{display:block;color:var(--text-muted);font-size:11px}
+.size .d{color:var(--sale);font-weight:700}
+.facts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
 .fact{background:var(--surface-2);border-radius:10px;padding:8px 10px}
 .fact .v{font-weight:700}.fact .l{font-size:11px;color:var(--text-muted)}
-.chart{position:relative;margin-top:6px}
+h3{font-size:15px;margin:16px 0 6px}
+.notes{display:grid;gap:6px}
+.note{background:var(--surface-2);border-radius:10px;padding:8px 10px;font-size:13px}
+.note b{display:block;font-size:11px;color:var(--text-muted);font-weight:400;text-transform:uppercase;letter-spacing:.05em}
+.desc{font-size:13px;color:var(--text-secondary);line-height:1.45}
+.chart{position:relative}
 .chart svg{display:block;width:100%;height:auto;overflow:visible}
 .tip{position:absolute;pointer-events:none;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:5px 8px;font-size:12px;display:none;white-space:nowrap}
 .tip b{display:block;font-size:14px}
-.btn{display:block;text-align:center;margin-top:14px;padding:12px;border-radius:12px;background:var(--text-primary);color:var(--bg);text-decoration:none;font-weight:700}
-.btn2{background:var(--surface-2);color:var(--text-primary);border:0;width:100%;margin-top:8px;padding:12px;border-radius:12px;cursor:pointer}
 details{margin-top:8px;font-size:13px;color:var(--text-secondary)}
 table{width:100%;border-collapse:collapse;font-size:13px;margin-top:6px}
 td,th{padding:4px;text-align:left;border-bottom:1px solid var(--line)}
 th{color:var(--text-muted);font-weight:400}
+textarea{width:100%;height:90px;border-radius:10px;border:1px solid var(--line);background:var(--surface-2);font:12px monospace;padding:8px;color:var(--text-primary)}
 </style>
 </head>
 <body>
 <header>
-  <h1 id="title">Perfume deals</h1>
+  <div class="top">
+    <h1 id="title">Perfume deals</h1>
+    <button class="icon-btn" id="themeBtn" aria-label="Theme" title="Theme"></button>
+  </div>
   <div class="sub" id="updated">Loading…</div>
+  <div class="offline" id="offline">Offline - showing the last saved data</div>
+  <div class="seg" id="genders">
+    <button data-g="men">Men</button><button data-g="women">Women</button><button data-g="unisex">Unisex</button>
+  </div>
 </header>
 
 <main>
-  <!-- DEALS -->
   <section class="view on" id="v-deals">
     <input class="search" id="q" type="search" placeholder="Search a perfume or brand" autocomplete="off">
     <div class="chips" id="chips"></div>
@@ -134,11 +157,12 @@ th{color:var(--text-muted);font-weight:400}
       <select id="brand"><option value="">All brands</option></select>
       <select id="mind">
         <option value="0">Any discount</option><option value="10">≥ 10 %</option>
-        <option value="15">≥ 15 %</option><option value="20">≥ 20 %</option>
+        <option value="15">≥ 15 %</option><option value="20">≥ 20 %</option><option value="30">≥ 30 %</option>
       </select>
       <select id="sort">
         <option value="fame">Most famous</option><option value="disc">Biggest discount</option>
         <option value="save">Biggest saving</option><option value="best">Best sellers</option>
+        <option value="pm">Cheapest per 100 ml</option>
         <option value="pasc">Price: low to high</option><option value="pdesc">Price: high to low</option>
       </select>
     </div>
@@ -146,13 +170,19 @@ th{color:var(--text-muted);font-weight:400}
     <div id="list"></div>
   </section>
 
-  <!-- WATCHLIST -->
   <section class="view" id="v-watch">
     <div class="count" id="wcount"></div>
     <div id="wlist"></div>
+    <div class="panel" id="sync">
+      <h2>Email alerts for your watchlist</h2>
+      <div class="sub">The daily email can warn you when a starred perfume goes on sale or drops in price.
+        Copy your list, then paste it into <b>watchlist.txt</b> on GitHub and commit.</div>
+      <textarea id="watchText" readonly></textarea>
+      <button class="btn" id="copyWatch">Copy my list</button>
+      <a class="btn2" id="editWatch" target="_blank" rel="noopener">Open watchlist.txt on GitHub</a>
+    </div>
   </section>
 
-  <!-- STATS -->
   <section class="view" id="v-stats"></section>
 </main>
 
@@ -171,98 +201,134 @@ const $ = (s, r = document) => r.querySelector(s);
 const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
 const dh = v => v == null ? "–" : v.toLocaleString("en-GB", { maximumFractionDigits: 0 }) + " DH";
 const fmtDate = iso => iso ? new Date(iso + "T00:00:00").toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }) : "–";
-
-// ---- local storage (watchlist) - may be unavailable, never fatal ----
+const fold = s => (s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
 const store = {
   get(k, d) { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } },
   set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
 };
-let watch = store.get("kos_watch", {});     // handle -> {p: price when starred, d: date}
+const GENDERS = { men: "Men", women: "Women", unisex: "Unisex" };
+const V = { size: 0, ml: 1, p: 2, o: 3, d: 4, st: 5, lo: 6, hi: 7, sample: 8 };   // variant columns
 
-let DATA = [], BY = {}, HISTORY = null, UPDATED = "";
-const state = { q: "", sale: true, famous: false, isnew: false, low: false, stock: true, brand: "", mind: 0, sort: "fame", limit: 60 };
+// ---------------- theme ----------------
+const THEMES = ["auto", "dark", "light"], THEME_ICON = { auto: "🌗", dark: "🌙", light: "☀️" };
+let theme = store.get("kos_theme", "auto");
+function applyTheme() {
+  if (theme === "auto") delete document.documentElement.dataset.theme; else document.documentElement.dataset.theme = theme;
+  $("#themeBtn").textContent = THEME_ICON[theme]; $("#themeBtn").title = "Theme: " + theme;
+  try { localStorage.setItem("kos_theme", theme); } catch {}
+}
+$("#themeBtn").onclick = () => { theme = THEMES[(THEMES.indexOf(theme) + 1) % 3]; applyTheme(); };
+applyTheme();
 
-const CHIPS = [
-  ["sale", "On sale"], ["famous", "Famous"], ["isnew", "New"], ["low", "Lowest price"], ["stock", "In stock"]
-];
+// ---------------- data ----------------
+let gender = store.get("kos_gender", "men");
+const CACHE = {};           // gender -> {updated, items, by}
+const DETAILS = {}, HIST = {};
+let watch = store.get("kos_watch2", {});      // "g|handle" -> {p, d}
+let fileWatch = new Set();                     // handles from docs/watchlist.txt
 
-async function load() {
+async function loadGender(g) {
+  if (CACHE[g]) return CACHE[g];
+  const j = await (await fetch(`data/${g}.json`)).json();
+  j.items.forEach(x => {
+    x.g = g; x.key = g + "|" + x.h;
+    x.atLow = x.s && x.lo != null && x.p <= x.lo && x.hi > x.p;     // only once it has been higher before
+    x.hay = fold(x.b + " " + x.n + " " + x.k);
+  });
+  j.by = Object.fromEntries(j.items.map(x => [x.h, x]));
+  return CACHE[g] = j;
+}
+async function lazy(store_, file, g) {
+  if (!store_[g]) { try { store_[g] = await (await fetch(`data/${file}-${g}.json`)).json(); } catch { store_[g] = {}; } }
+  return store_[g];
+}
+async function loadFileWatch() {
   try {
-    const r = await fetch("data/latest.json?v=" + Date.now());
-    const j = await r.json();
-    UPDATED = j.updated;
-    DATA = j.items.map(x => ({ ...x, save: x.o && x.p ? x.o - x.p : 0, atLow: x.s && x.lo != null && x.p <= x.lo && x.hi > x.p,   // only once the price has been higher before
-      hay: (x.t + " " + x.b).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "") }));
-    DATA.forEach(x => BY[x.h] = x);
-    $("#updated").textContent = "Updated " + fmtDate(UPDATED) + " · " + DATA.filter(x => x.s && x.st).length + " deals";
-    const brands = [...new Set(DATA.map(x => x.b).filter(Boolean))].sort((a, b) => a.localeCompare(b));
-    for (const b of brands) $("#brand").append(new Option(b, b));
-    buildChips(); renderDeals(); renderWatch(); renderStats();
-  } catch (e) {
+    const t = await (await fetch("watchlist.txt", { cache: "no-store" })).text();
+    fileWatch = new Set(t.split("\n").map(l => l.split("#")[0].trim()).filter(Boolean));
+  } catch {}
+}
+
+const state = { q: "", sale: true, famous: false, isnew: false, low: false, notes: false, stock: true, brand: "", mind: 0, sort: "fame", limit: 60 };
+const CHIPS = [["sale", "On sale"], ["famous", "Famous"], ["isnew", "New"], ["low", "Lowest price"], ["notes", "With notes"], ["stock", "In stock"]];
+
+async function selectGender(g) {
+  gender = g; store.set("kos_gender", g);
+  document.querySelectorAll("#genders button").forEach(b => b.classList.toggle("on", b.dataset.g === g));
+  $("#updated").textContent = "Loading…";
+  try {
+    const data = await loadGender(g);
+    $("#updated").textContent = "Updated " + fmtDate(data.updated) + " · " + data.items.filter(x => x.s).length + " deals";
+    const sel = $("#brand"); sel.replaceChildren(new Option("All brands", ""));
+    [...new Set(data.items.map(x => x.b).filter(Boolean))].sort((a, b) => a.localeCompare(b)).forEach(b => sel.append(new Option(b, b)));
+    state.brand = ""; state.limit = 60;
+    renderDeals(); renderStats();
+  } catch {
     $("#updated").textContent = "Could not load the data.";
-    $("#list").append(el("div", "empty", "No data yet. Run the workflow once on GitHub."));
+    $("#list").replaceChildren(el("div", "empty", "No data yet. Run the workflow once on GitHub."));
   }
 }
-async function loadHistory() {
-  if (HISTORY) return HISTORY;
-  try { HISTORY = await (await fetch("data/history.json?v=" + UPDATED)).json(); } catch { HISTORY = {}; }
-  return HISTORY;
-}
+document.querySelectorAll("#genders button").forEach(b => b.onclick = () => selectGender(b.dataset.g));
 
-// ---------------- DEALS ----------------
+// ---------------- deals ----------------
 function buildChips() {
-  const box = $("#chips");
   for (const [k, label] of CHIPS) {
     const c = el("button", "chip" + (state[k] ? " on" : ""), label);
     c.onclick = () => { state[k] = !state[k]; c.classList.toggle("on", state[k]); state.limit = 60; renderDeals(); };
-    box.append(c);
+    $("#chips").append(c);
   }
 }
+const NONE = 1e9;
 const SORTS = {
-  fame: (a, b) => (a.f ?? 1e4) - (b.f ?? 1e4) || a.r - b.r,
-  disc: (a, b) => b.d - a.d || (a.f ?? 1e4) - (b.f ?? 1e4),
+  fame: (a, b) => (a.f ?? NONE) - (b.f ?? NONE) || (a.r ?? NONE) - (b.r ?? NONE),
+  disc: (a, b) => b.d - a.d || (a.f ?? NONE) - (b.f ?? NONE),
   save: (a, b) => b.save - a.save,
-  best: (a, b) => a.r - b.r,
+  best: (a, b) => (a.r ?? NONE) - (b.r ?? NONE),
+  pm: (a, b) => (a.pm ?? NONE) - (b.pm ?? NONE),
   pasc: (a, b) => a.p - b.p,
   pdesc: (a, b) => b.p - a.p,
 };
 function filtered() {
-  const q = state.q.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").trim();
-  return DATA.filter(x =>
-    (!state.sale || x.s) && (!state.stock || x.st) && (!state.famous || x.f != null) &&
-    (!state.isnew || x.nw) && (!state.low || x.atLow) && (!state.brand || x.b === state.brand) &&
-    (x.d >= state.mind) && (!q || q.split(/\s+/).every(w => x.hay.includes(w)))
+  const data = CACHE[gender]; if (!data) return [];
+  const q = fold(state.q).trim();
+  return data.items.filter(x =>
+    (!state.sale || x.s) && (!state.stock || x.st) && (!state.famous || x.f != null) && (!state.isnew || x.nw) &&
+    (!state.low || x.atLow) && (!state.notes || x.nt) && (!state.brand || x.b === state.brand) && x.d >= state.mind &&
+    (!q || q.split(/\s+/).every(w => x.hay.includes(w)))
   ).sort(SORTS[state.sort]);
 }
+function isWatched(x) { return !!watch[x.key] || fileWatch.has(x.h); }
 function card(x) {
   const c = el("div", "card");
   if (x.i) { const img = el("img"); img.src = x.i; img.loading = "lazy"; img.alt = ""; c.append(img); } else c.append(el("div", "ph"));
   const b = el("div", "body");
-  b.append(el("div", "brand", x.b), el("div", "name", x.n), el("div", "kind", x.k));
+  b.append(el("div", "brand", x.b + (gender !== x.g ? " · " + GENDERS[x.g] : "")), el("div", "name", x.n), el("div", "kind", x.k + (x.sz ? " · " + x.sz : "")));
   const pr = el("div", "prices"); pr.append(el("span", "price", dh(x.p)));
   if (x.o) pr.append(el("span", "old", dh(x.o)));
+  if (x.pm) pr.append(el("span", "per", dh(x.pm) + " / 100 ml"));
   b.append(pr);
   const tags = el("div", "tags");
   if (x.s) tags.append(el("span", "tag sale", "-" + x.d + " %"));
   if (x.nw) tags.append(el("span", "tag new", "NEW"));
   if (x.atLow) tags.append(el("span", "tag low", "Lowest price"));
   if (x.f) tags.append(el("span", "tag", "#" + x.f + " famous"));
-  else if (x.r <= 100) tags.append(el("span", "tag", "#" + x.r + " best seller"));
+  else if (x.r && x.r <= 100) tags.append(el("span", "tag", "#" + x.r + " best seller"));
+  if (x.nt) tags.append(el("span", "tag", "Notes"));
   if (!x.st) tags.append(el("span", "tag out", "Sold out"));
-  const w = watch[x.h];
+  const w = watch[x.key];
   if (w && w.p && x.p < w.p) tags.append(el("span", "tag low", "↓ " + dh(w.p - x.p) + " since ⭐"));
   b.append(tags); c.append(b);
-  const s = el("button", "star" + (watch[x.h] ? " on" : ""), watch[x.h] ? "★" : "☆");
+  const s = el("button", "star" + (isWatched(x) ? " on" : ""), isWatched(x) ? "★" : "☆");
   s.setAttribute("aria-label", "Watchlist");
-  s.onclick = e => { e.stopPropagation(); toggleWatch(x); s.classList.toggle("on", !!watch[x.h]); s.textContent = watch[x.h] ? "★" : "☆"; };
+  s.onclick = e => { e.stopPropagation(); toggleWatch(x); s.classList.toggle("on", isWatched(x)); s.textContent = isWatched(x) ? "★" : "☆"; };
   c.append(s);
-  c.onclick = () => openSheet(x.h);
+  c.onclick = () => openSheet(x);
   return c;
 }
 function renderDeals() {
   const items = filtered(), list = $("#list");
   list.replaceChildren();
-  $("#count").textContent = items.length + " perfume" + (items.length > 1 ? "s" : "");
+  $("#count").textContent = items.length + " perfume" + (items.length === 1 ? "" : "s");
   if (!items.length) { list.append(el("div", "empty", "No perfume matches these filters.")); return; }
   items.slice(0, state.limit).forEach(x => list.append(card(x)));
   if (items.length > state.limit) {
@@ -276,34 +342,60 @@ $("#brand").onchange = e => { state.brand = e.target.value; state.limit = 60; re
 $("#mind").onchange = e => { state.mind = +e.target.value; state.limit = 60; renderDeals(); };
 $("#sort").onchange = e => { state.sort = e.target.value; state.limit = 60; renderDeals(); };
 
-// ---------------- WATCHLIST ----------------
+// ---------------- watchlist ----------------
 function toggleWatch(x) {
-  if (watch[x.h]) delete watch[x.h]; else watch[x.h] = { p: x.p, d: UPDATED };
-  store.set("kos_watch", watch); renderWatch();
+  if (isWatched(x)) { delete watch[x.key]; fileWatch.delete(x.h); }
+  else watch[x.key] = { p: x.p, d: CACHE[x.g]?.updated };
+  store.set("kos_watch2", watch); renderWatchText();
+  if ($("#v-watch").classList.contains("on")) renderWatch();
 }
-function renderWatch() {
-  const list = $("#wlist"); list.replaceChildren();
-  const items = Object.keys(watch).map(h => BY[h]).filter(Boolean).sort((a, b) => (b.s - a.s) || b.d - a.d);
+function watchHandles() { return [...new Set([...Object.keys(watch).map(k => k.split("|")[1]), ...fileWatch])].sort(); }
+function renderWatchText() {
+  const all = Object.values(CACHE).flatMap(d => d.items);
+  const names = Object.fromEntries(all.map(x => [x.h, x.b + " " + x.n + " " + x.k]));
+  $("#watchText").value = "# My watchlist - one perfume per line\n" + watchHandles().map(h => h + (names[h] ? "   # " + names[h] : "")).join("\n") + "\n";
+}
+async function renderWatch() {
+  const list = $("#wlist"); list.replaceChildren(el("div", "empty", "Loading…"));
+  await Promise.all(Object.keys(GENDERS).map(g => loadGender(g).catch(() => null)));
+  const wanted = new Set(watchHandles());
+  const items = Object.values(CACHE).flatMap(d => d.items).filter(x => wanted.has(x.h)).sort((a, b) => (b.s - a.s) || b.d - a.d);
+  list.replaceChildren();
   $("#wcount").textContent = items.length ? items.filter(x => x.s).length + " on sale out of " + items.length + " in your watchlist" : "";
-  if (!items.length) { list.append(el("div", "empty", "Tap ☆ on a perfume to follow it here. Price drops show up on its card.")); return; }
+  if (!items.length) list.append(el("div", "empty", "Tap ☆ on a perfume to follow it here."));
   items.forEach(x => list.append(card(x)));
+  renderWatchText();
 }
+$("#copyWatch").onclick = async () => {
+  try { await navigator.clipboard.writeText($("#watchText").value); $("#copyWatch").textContent = "Copied ✓"; }
+  catch { $("#watchText").select(); $("#copyWatch").textContent = "Select and copy the text above"; }
+  setTimeout(() => $("#copyWatch").textContent = "Copy my list", 2500);
+};
+(() => {   // GitHub edit link, built from this site's address (owner.github.io/repo)
+  const owner = location.hostname.split(".")[0], repo = location.pathname.split("/").filter(Boolean)[0] || "perfume-deals";
+  $("#editWatch").href = `https://github.com/${owner}/${repo}/edit/main/docs/watchlist.txt`;
+})();
 
-// ---------------- STATS ----------------
-function barList(rows, fmt, label) {
-  // single-series horizontal bars; value labels in text ink, tooltip via title + focus
+// ---------------- stats ----------------
+function barList(rows, fmt, unit) {
   const box = el("div", "bars"); const max = Math.max(...rows.map(r => r[1]), 1);
   for (const [name, v] of rows) {
-    const hit = el("div", "hit"); hit.tabIndex = 0; hit.title = name + ": " + fmt(v) + " " + label;
+    const hit = el("div", "hit"); hit.tabIndex = 0; hit.title = name + ": " + fmt(v) + " " + unit;
     const tr = el("div", "track"), bar = el("div", "bar"); bar.style.width = (v / max * 100) + "%"; tr.append(bar);
     hit.append(el("div", "lbl", name), tr, el("div", "val", fmt(v)));
     box.append(hit);
   }
   return box;
 }
+function mini(x, right, sub) {
+  const m = el("div", "mini"); const l = el("div");
+  l.append(el("div", "name", x.b + " " + x.n), el("div", "kind", sub || (x.k + " · " + x.sz + " · " + dh(x.p))));
+  m.append(l, el("div", "r", right)); m.onclick = () => openSheet(x); return m;
+}
 function renderStats() {
   const v = $("#v-stats"); v.replaceChildren();
-  const sale = DATA.filter(x => x.s && x.st);
+  const data = CACHE[gender]; if (!data) return;
+  const sale = data.items.filter(x => x.s && x.st);
   const avg = sale.length ? sale.reduce((s, x) => s + x.d, 0) / sale.length : 0;
   const tiles = el("div", "tiles");
   for (const [val, lab] of [[sale.length, "perfumes on sale"], [sale.filter(x => x.f).length, "famous on sale"],
@@ -313,76 +405,108 @@ function renderStats() {
   }
   v.append(tiles);
 
-  // best deals on famous perfumes
-  const p1 = el("div", "panel"); p1.append(el("h2", null, "Best deals on famous perfumes"), el("div", "sub", "Biggest discounts among well-known perfumes"));
-  sale.filter(x => x.f).sort((a, b) => b.d - a.d || b.save - a.save).slice(0, 8).forEach(x => {
-    const m = el("div", "mini"); const l = el("div"); l.append(el("div", "name", x.b + " " + x.n), el("div", "kind", x.k + " · " + dh(x.p)));
-    m.append(l, el("div", "r", "-" + x.d + " %")); m.onclick = () => openSheet(x.h); p1.append(m);
-  });
+  const p1 = el("div", "panel"); p1.append(el("h2", null, "Best deals on famous perfumes"), el("div", "sub", GENDERS[gender] + " - biggest discounts among well-known perfumes"));
+  sale.filter(x => x.f).sort((a, b) => b.d - a.d || b.save - a.save).slice(0, 8).forEach(x => p1.append(mini(x, "-" + x.d + " %")));
   v.append(p1);
 
-  // promos by brand
+  const p5 = el("div", "panel"); p5.append(el("h2", null, "Best value per 100 ml"), el("div", "sub", "Famous perfumes on sale, cheapest per 100 ml"));
+  sale.filter(x => x.f && x.pm).sort((a, b) => a.pm - b.pm).slice(0, 6).forEach(x => p5.append(mini(x, dh(x.pm))));
+  v.append(p5);
+
   const byBrand = {}; sale.forEach(x => byBrand[x.b] = (byBrand[x.b] || 0) + 1);
   const p2 = el("div", "panel"); p2.append(el("h2", null, "Deals by brand"), el("div", "sub", "Number of perfumes on sale, top 12 brands"));
   p2.append(barList(Object.entries(byBrand).sort((a, b) => b[1] - a[1]).slice(0, 12), n => String(n), "deals"));
   v.append(p2);
 
-  // discount distribution
   const byD = {}; sale.forEach(x => byD[x.d] = (byD[x.d] || 0) + 1);
   const p3 = el("div", "panel"); p3.append(el("h2", null, "Discount levels"), el("div", "sub", "Number of perfumes at each discount"));
   p3.append(barList(Object.entries(byD).sort((a, b) => b[0] - a[0]).map(([d, n]) => ["-" + d + " %", n]), n => String(n), "perfumes"));
   v.append(p3);
 
-  // price drops since previous run (needs history)
   const p4 = el("div", "panel"); p4.append(el("h2", null, "Biggest price drops"), el("div", "sub", "Since the previous run"));
   const holder = el("div", null, "Loading…"); p4.append(holder); v.append(p4);
-  loadHistory().then(H => {
+  lazy(HIST, "history", gender).then(H => {
     holder.replaceChildren();
-    const drops = DATA.map(x => { const pts = H[x.h] || []; if (pts.length < 2) return null;
-      const [a, b] = pts.slice(-2); return b[0] === UPDATED && b[1] < a[1] ? { x, drop: a[1] - b[1] } : null; }).filter(Boolean)
-      .sort((a, b) => b.drop - a.drop).slice(0, 8);
+    const drops = data.items.map(x => {
+      const pts = (H[x.h] || {})[x.sz] || []; if (pts.length < 2) return null;
+      const [a, b] = pts.slice(-2); return b[0] === data.updated && b[1] < a[1] ? { x, drop: a[1] - b[1] } : null;
+    }).filter(Boolean).sort((a, b) => b.drop - a.drop).slice(0, 8);
     if (!drops.length) { holder.append(el("div", "sub", "No drops yet: the history fills up with each daily run.")); return; }
-    drops.forEach(({ x, drop }) => { const m = el("div", "mini"); const l = el("div");
-      l.append(el("div", "name", x.b + " " + x.n), el("div", "kind", dh(x.p))); m.append(l, el("div", "r", "↓ " + dh(drop)));
-      m.onclick = () => openSheet(x.h); holder.append(m); });
+    drops.forEach(({ x, drop }) => holder.append(mini(x, "↓ " + dh(drop))));
   });
 }
 
-// ---------------- DETAIL SHEET ----------------
+// ---------------- detail sheet ----------------
 function closeSheet() { $("#sheet").classList.remove("on"); $("#sheetBg").classList.remove("on"); }
 $("#sheetBg").onclick = closeSheet;
-async function openSheet(h) {
-  const x = BY[h], s = $("#sheet"); s.replaceChildren();
-  s.append(el("div", "grab"));
+async function openSheet(x) {
+  const s = $("#sheet"); s.replaceChildren(el("div", "grab"));
   const hero = el("div", "hero");
-  if (x.i) { const img = el("img"); img.src = x.i.replace("_200x", "_400x"); img.alt = ""; hero.append(img); }
-  const t = el("div"); t.append(el("div", "brand", x.b), el("div", "name", x.n), el("div", "kind", x.k));
-  const pr = el("div", "prices"); pr.append(el("span", "price", dh(x.p))); if (x.o) pr.append(el("span", "old", dh(x.o)));
-  t.append(pr); hero.append(t); s.append(hero);
-  const facts = el("div", "facts");
-  for (const [val, lab] of [[x.s ? "-" + x.d + " %" : "Not on sale", "Discount"], [x.save ? dh(x.save) : "–", "Saving"],
-                            [dh(x.lo), "Lowest price (" + fmtDate(x.lod) + ")"], [dh(x.reg), "Regular price"],
-                            [x.f ? "#" + x.f : "–", "Fame rank"], ["#" + x.r, "Kosmenia sales rank"]]) {
-    const f = el("div", "fact"); f.append(el("div", "v", val), el("div", "l", lab)); facts.append(f);
+  if (x.i) { const img = el("img"); img.src = x.i; img.alt = ""; hero.append(img); }
+  const t = el("div"); t.append(el("div", "brand", x.b + " · " + GENDERS[x.g]), el("div", "name", x.n), el("div", "kind", x.k));
+  hero.append(t); s.append(hero);
+
+  // sizes
+  let current = x.v.findIndex(v => v[V.size] === x.sz); if (current < 0) current = 0;
+  const sizeBox = el("div", "sizes"); s.append(sizeBox);
+  const facts = el("div", "facts"); s.append(facts);
+  s.append(el("h3", null, "Price history"));
+  const chartBox = el("div", "chart"); s.append(chartBox);
+  const notesBox = el("div"); s.append(notesBox);
+
+  const H = lazy(HIST, "history", x.g);
+  function showSize(i) {
+    current = i; const v = x.v[i];
+    sizeBox.replaceChildren();
+    x.v.forEach((w, j) => {
+      const b = el("button", "size" + (j === i ? " on" : ""));
+      b.append(document.createTextNode(w[V.sample] ? "Sample " + (w[V.ml] ? w[V.ml] + " ml" : "") : w[V.size]));
+      const sm = el("small"); sm.append(document.createTextNode(dh(w[V.p]) + " "));
+      if (w[V.d]) sm.append(el("span", "d", "-" + w[V.d] + "%"));
+      if (!w[V.st]) sm.append(document.createTextNode(" · sold out"));
+      b.append(sm); b.onclick = () => showSize(j); sizeBox.append(b);
+    });
+    facts.replaceChildren();
+    const per = v[V.ml] && !v[V.sample] ? dh(Math.round(v[V.p] / v[V.ml] * 100)) : "–";
+    for (const [val, lab] of [[dh(v[V.p]) + (v[V.o] ? "  (was " + dh(v[V.o]) + ")" : ""), "Price " + v[V.size]],
+                              [v[V.d] ? "-" + v[V.d] + " % · save " + dh(v[V.o] - v[V.p]) : "Not on sale", "Discount"],
+                              [per, "Price per 100 ml"], [dh(v[V.lo]), "Lowest price seen"],
+                              [x.f ? "#" + x.f : "–", "Fame rank"], [x.r ? "#" + x.r : "–", "Kosmenia sales rank"]]) {
+      const f = el("div", "fact"); f.append(el("div", "v", val), el("div", "l", lab)); facts.append(f);
+    }
+    chartBox.replaceChildren(el("div", "sub", "Loading…"));
+    H.then(h => drawChart(chartBox, ((h[x.h] || {})[v[V.size]]) || [], CACHE[x.g].updated));
   }
-  s.append(facts);
-  s.append(el("div", "name", "Price history"));
-  const chartBox = el("div", "chart", "Loading…"); s.append(chartBox);
-  const a = el("a", "btn", "Open on Kosmenia"); a.href = x.l; a.target = "_blank"; a.rel = "noopener"; s.append(a);
-  const wb = el("button", "btn2", watch[h] ? "★ Remove from watchlist" : "☆ Add to watchlist");
-  wb.onclick = () => { toggleWatch(x); wb.textContent = watch[h] ? "★ Remove from watchlist" : "☆ Add to watchlist"; renderDeals(); };
-  s.append(wb);
+  showSize(current);
+
+  const a = el("a", "btn", "Open on Kosmenia"); a.href = x.l; a.target = "_blank"; a.rel = "noopener";
+  const fr = el("a", "btn2", "Search on Fragrantica"); fr.target = "_blank"; fr.rel = "noopener";
+  fr.href = "https://www.fragrantica.com/search/?query=" + encodeURIComponent(x.b + " " + x.n);
+  const wb = el("button", "btn2", isWatched(x) ? "★ Remove from watchlist" : "☆ Add to watchlist");
+  wb.onclick = () => { toggleWatch(x); wb.textContent = isWatched(x) ? "★ Remove from watchlist" : "☆ Add to watchlist"; renderDeals(); };
+  s.append(a, fr, wb);
   s.classList.add("on"); $("#sheetBg").classList.add("on");
-  const H = await loadHistory();
-  drawChart(chartBox, H[h] || []);
+
+  const D = (await lazy(DETAILS, "details", x.g))[x.h] || {};
+  notesBox.replaceChildren();
+  const n = D.notes || {};
+  if (n.top || n.heart || n.base) {
+    notesBox.append(el("h3", null, "Fragrance notes"));
+    const g = el("div", "notes");
+    for (const [k, lab] of [["top", "Top notes"], ["heart", "Heart notes"], ["base", "Base notes"]]) {
+      if (n[k]) { const d = el("div", "note"); d.append(el("b", null, lab), document.createTextNode(n[k])); g.append(d); }
+    }
+    notesBox.append(g);
+  }
+  if (D.desc) { notesBox.append(el("h3", null, "Description"), el("div", "desc", D.desc)); }
+  if (!(n.top || n.heart || n.base)) notesBox.append(el("div", "sub", "Notes not listed by Kosmenia - search Fragrantica above."));
 }
 
-function drawChart(box, pts) {
+function drawChart(box, pts, updated) {
   box.replaceChildren();
   if (!pts.length) { box.append(el("div", "sub", "No history yet.")); return; }
-  // step series: each point holds until the next change; extend to the last update
-  const series = pts.map(p => ({ t: new Date(p[0] + "T00:00:00").getTime(), v: p[1], o: p[2] }));
-  const lastT = new Date(UPDATED + "T00:00:00").getTime();
+  const series = pts.map(p => ({ t: new Date(p[0] + "T00:00:00").getTime(), v: p[1] }));
+  const lastT = new Date(updated + "T00:00:00").getTime();
   if (series[series.length - 1].t < lastT) series.push({ ...series[series.length - 1], t: lastT, carry: true });
   if (series.length === 1) series.push({ ...series[0], t: series[0].t + 864e5, carry: true });
   const W = 340, H = 150, L = 46, R = 10, T = 10, B = 24;
@@ -394,7 +518,7 @@ function drawChart(box, pts) {
   const svg = mk("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Price history" });
   const css = getComputedStyle(document.documentElement);
   const ink = css.getPropertyValue("--text-muted"), grid = css.getPropertyValue("--line"), col = css.getPropertyValue("--series-1");
-  for (const v of [lo, hi].filter((v, i, a) => a.indexOf(v) === i)) {      // recessive grid at min / max only
+  for (const v of [lo, hi].filter((v, i, a) => a.indexOf(v) === i)) {
     svg.append(mk("line", { x1: L, x2: W - R, y1: Y(v), y2: Y(v), stroke: grid, "stroke-width": 1 }));
     const tx = mk("text", { x: L - 6, y: Y(v) + 4, "text-anchor": "end", "font-size": 10, fill: ink }); tx.textContent = Math.round(v); svg.append(tx);
   }
@@ -406,7 +530,6 @@ function drawChart(box, pts) {
   for (let i = 1; i < series.length; i++) d += ` H${X(series[i].t)} V${Y(series[i].v)}`;
   svg.append(mk("path", { d, fill: "none", stroke: col, "stroke-width": 2, "stroke-linejoin": "round" }));
   series.filter(p => !p.carry).forEach(p => svg.append(mk("circle", { cx: X(p.t), cy: Y(p.v), r: 4, fill: col, stroke: css.getPropertyValue("--surface-1"), "stroke-width": 2 })));
-  // crosshair + tooltip: snaps to the price in force at the pointer's date
   const hair = mk("line", { y1: T, y2: H - B, stroke: ink, "stroke-width": 1, visibility: "hidden" });
   const dot = mk("circle", { r: 5, fill: col, visibility: "hidden" });
   const hit = mk("rect", { x: L, y: 0, width: W - L - R, height: H, fill: "transparent", tabindex: 0 });
@@ -426,22 +549,30 @@ function drawChart(box, pts) {
   const hide = () => { tip.style.display = "none"; hair.setAttribute("visibility", "hidden"); dot.setAttribute("visibility", "hidden"); };
   hit.addEventListener("pointermove", e => show(e.clientX)); hit.addEventListener("pointerdown", e => show(e.clientX));
   hit.addEventListener("pointerleave", hide);
-  hit.addEventListener("focus", () => { const r = svg.getBoundingClientRect(); show(r.right - 1); }); hit.addEventListener("blur", hide);
-  // table view: every value reachable without hovering
+  hit.addEventListener("focus", () => show(svg.getBoundingClientRect().right - 1)); hit.addEventListener("blur", hide);
   const det = el("details"); det.append(el("summary", null, "Show the price table"));
   const tb = el("table"); const hr = el("tr"); ["Date", "Price", "Was"].forEach(h => hr.append(el("th", null, h))); tb.append(hr);
   pts.slice().reverse().forEach(p => { const tr = el("tr"); tr.append(el("td", null, fmtDate(p[0])), el("td", null, dh(p[1])), el("td", null, p[2] ? dh(p[2]) : "–")); tb.append(tr); });
   det.append(tb); box.append(det);
 }
 
-// ---------------- NAV ----------------
+// ---------------- nav ----------------
 document.querySelectorAll("nav button").forEach(b => b.onclick = () => {
   document.querySelectorAll("nav button").forEach(x => x.classList.toggle("on", x === b));
   document.querySelectorAll(".view").forEach(v => v.classList.toggle("on", v.id === "v-" + b.dataset.v));
   $("#title").textContent = { deals: "Perfume deals", watch: "Watchlist", stats: "Stats" }[b.dataset.v];
+  $("#genders").style.display = b.dataset.v === "watch" ? "none" : "";
+  if (b.dataset.v === "watch") renderWatch();
   window.scrollTo(0, 0);
 });
-load();
+
+// ---------------- offline ----------------
+const net = () => $("#offline").style.display = navigator.onLine ? "none" : "block";
+addEventListener("online", net); addEventListener("offline", net); net();
+if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
+
+buildChips();
+loadFileWatch().then(() => selectGender(gender));
 </script>
 </body>
 </html>
