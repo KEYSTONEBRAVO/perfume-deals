@@ -211,33 +211,73 @@ def parse_size(title):
     return ml, sample
 
 
-NOTE_RE = {
-    "top": r"notes?\s+de\s+t[êe]te",
-    "heart": r"notes?\s+de\s+c(?:œ|oe)ur",
-    "base": r"notes?\s+de\s+fond",
+def block_text(html):
+    """Description as plain text, one line per paragraph / <br> / heading (keeps the structure)."""
+    html = re.sub(r"(?i)<br\s*/?>|</?(p|div|li|ul|h[1-6]|tr)\b[^>]*>", "\n", html or "")
+    text = BeautifulSoup(html, "html.parser").get_text("")
+    lines = [re.sub(r"[ \t ]+", " ", l).strip() for l in text.split("\n")]
+    return "\n".join(l for l in lines if l)
+
+
+# "Tête :", "Note de tête :", "Notes de cœur :", "Fond :" ... (a colon is required, so prose like
+# "sur un fond de cèdre" is never taken for a label)
+_LBL = {
+    "top": r"(?:notes?\s+de\s+)?t[êe]te",
+    "heart": r"(?:notes?\s+de\s+)?c(?:œ|oe)ur",
+    "base": r"(?:notes?\s+de\s+)?fond",
 }
+_ANY_LBL = r"(?<![A-Za-zÀ-ÿ])(?:" + "|".join(_LBL.values()) + r")\s*:"
 
 
 def extract_notes(text):
-    """Top / heart / base notes when Kosmenia's description lists them."""
+    """Top / heart / base notes from Kosmenia's description (stops at the next label or line)."""
     notes = {}
-    any_label = "|".join(NOTE_RE.values())
-    for key, label in NOTE_RE.items():
-        m = re.search(rf"(?:{label})\s*:?\s*(.+?)(?=(?:{any_label})|$)", text, re.I)
+    for key, label in _LBL.items():
+        m = re.search(rf"(?<![A-Za-zÀ-ÿ]){label}\s*:\s*(.+?)(?={_ANY_LBL}|\n|$)", text, re.I)
         if m:
-            value = m.group(1).strip(" .:;-")[:160]
-            if value:
+            value = re.split(r"(?i)\b(livraison|formats?|découvrez)\b", m.group(1))[0]
+            value = value.strip(" .:;-–")
+            if 1 < len(value) <= 200:
                 notes[key] = value
+    if not notes:   # no top/heart/base: a plain list under "Notes parfumées" / "Notes olfactives"
+        m = re.search(r"(?i)notes?\s+(?:olfactives?|parfum[ée]es?)\s*:?\s*\n((?:.*\n?){1,8})", text)
+        if m:
+            items = []
+            for line in m.group(1).split("\n"):
+                if re.match(r"(?i)\s*(formats?|livraison|découvrez|famille|si vous|nous vous)\b", line):
+                    break
+                line = line.strip(" -–•·").strip()
+                if line:
+                    items.append(line)
+            value = ", ".join(items)
+            if 1 < len(value) <= 200:
+                notes["main"] = value
     return notes
 
 
-def short_description(text, notes_text_start):
-    text = text[:notes_text_start] if notes_text_start > 0 else text
-    text = re.sub(r"(pyramide|notes?)\s+olfactives?\s*:?\s*$", "", text.strip(), flags=re.I)
+def extract_family(text):
+    """'Famille olfactive : Parfum Oriental Boisé' -> 'Oriental Boisé'."""
+    m = re.search(r"famille\s+olfactive\s*:\s*(.+?)(?=\n|$|\bnotes?\b|\bt[êe]te\s*:|\bformats?\b|\blivraison\b)", text, re.I)
+    if not m:
+        return ""
+    fam = re.sub(r"(?i)^parfums?\s+", "", m.group(1)).strip(" .:;-–")
+    fam = re.sub(r"\bE(pic|pice)", r"É\1", fam)          # "Epicé" and "Épicé" -> one family
+    return fam[:1].upper() + fam[1:] if 2 < len(fam) < 40 else ""
+
+
+_DESC_STOP = re.compile(r"(?im)^\s*(famille\s+olfactive|notes?\s+(olfactives?|parfum[ée]es?)|pyramide|"
+                        r"(notes?\s+de\s+)?t[êe]te\s*:|livraison|formats?\b)")
+
+
+def short_description(text):
+    """The story part of the description (before notes, formats and delivery info), max ~600 chars."""
+    m = _DESC_STOP.search(text)
+    text = (text[:m.start()] if m else text).replace("\n", " ").strip()
     if len(text) <= 600:
-        return text.strip()
+        return text
     cut = text[:600]
-    return (cut[:cut.rfind(". ") + 1] if ". " in cut[200:] else cut + "…").strip()
+    end = cut.rfind(". ")
+    return cut[:end + 1] if end > 250 else cut.rstrip() + "…"
 
 
 def build_product(raw, gender, famous, ranks):
@@ -260,16 +300,16 @@ def build_product(raw, gender, famous, ranks):
             "p": price, "o": old, "d": round((old - price) / old * 100) if old else 0,
             "st": bool(v.get("available")),
         })
-    desc_text = text_of(raw.get("body_html"))
+    desc_text = block_text(raw.get("body_html"))
     notes = extract_notes(desc_text)
-    first_note = min([m.start() for m in (re.search(l, desc_text, re.I) for l in NOTE_RE.values()) if m], default=-1)
     title = f"{brand} {name} {kind}".strip()
     handle = raw["handle"]
     return {
         "gender": gender, "handle": handle, "title": title, "brand": brand, "name": name, "kind": kind,
         "link": f"{SHOP}/products/{handle}", "image": image,
         "fame": fame_rank(title, handle, famous), "rank": ranks.get(handle),
-        "variants": variants, "notes": notes, "desc": short_description(desc_text, first_note),
+        "variants": variants, "notes": notes, "family": extract_family(desc_text),
+        "desc": short_description(desc_text),
     }
 
 
@@ -476,7 +516,7 @@ def app_item(p):
         "i": p["image"], "f": p["fame"], "r": p["rank"], "s": p["on_sale"], "st": p["in_stock"], "nw": p["new"],
         "d": p["discount"], "p": b["p"] if b else None, "o": b["o"] if b else None,
         "sz": b["size"] if b else "", "save": p["saving"], "pm": p["per100"], "nt": bool(p["notes"]),
-        "lo": b["lo"] if b else None, "hi": b["hi"] if b else None, "c": p.get("color"),
+        "lo": b["lo"] if b else None, "hi": b["hi"] if b else None, "c": p.get("color"), "fm": p.get("family", ""),
         "v": [[v["size"], v["ml"], v["p"], v["o"], v["d"], v["st"], v["lo"], v["hi"], v["sample"]] for v in p["variants"]],
     }
 
