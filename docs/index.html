@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Promos Parfums - les meilleures promos parfum au Maroc</title>
+<meta name="description" content="Toutes les promos parfum de Kosmenia, vérifiées chaque jour : homme, femme et mixte, chaque taille, prix au 100 ml et historique des prix.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Promos Parfums">
+<meta property="og:title" content="Promos Parfums - les meilleures promos parfum au Maroc">
+<meta property="og:description" content="Promos vérifiées chaque jour : homme, femme et mixte, chaque taille, prix au 100 ml et historique des prix.">
+<meta property="og:image" content="https://keystonebravo.github.io/perfume-deals/og.png">
+<meta property="og:url" content="https://keystonebravo.github.io/perfume-deals/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#111214">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Promos Parfums">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<script>
+  // apply the saved theme before first paint (no flash)
+  try { const t = localStorage.getItem("kos_theme"); if (t === "light" || t === "dark") document.documentElement.dataset.theme = t; } catch {}
+</script>
+<style>
+:root{
+  color-scheme:dark;
+  --bg:#111214; --surface-1:#1a1a19; --surface-2:#24242a; --line:#2e2e33;
+  --text-primary:#f0efec; --text-secondary:#c3c2b7; --text-muted:#8c8b85;
+  --series-1:#3987e5; --sale:#e66767; --good:#0ca30c; --new:#3987e5; --gold:#e0b100;
+  --radius:14px;
+}
+@media (prefers-color-scheme: light){
+  :root:where(:not([data-theme="dark"])){color-scheme:light;
+    --bg:#f2f2f0; --surface-1:#fcfcfb; --surface-2:#ececea; --line:#e0dfdb;
+    --text-primary:#0b0b0b; --text-secondary:#52514e; --text-muted:#7a7974;
+    --series-1:#2a78d6; --sale:#e34948; --good:#008300; --new:#2a78d6; --gold:#b98500;}
+}
+:root[data-theme="light"]{color-scheme:light;
+    --bg:#f2f2f0; --surface-1:#fcfcfb; --surface-2:#ececea; --line:#e0dfdb;
+    --text-primary:#0b0b0b; --text-secondary:#52514e; --text-muted:#7a7974;
+    --series-1:#2a78d6; --sale:#e34948; --good:#008300; --new:#2a78d6; --gold:#b98500;}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--text-primary);
+  font:15px/1.35 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+button,select,input{font:inherit;color:inherit}
+header{position:sticky;top:0;z-index:5;background:var(--bg);padding:calc(env(safe-area-inset-top) + 10px) 16px 8px}
+.top{display:flex;align-items:center;gap:8px}
+h1{font-size:22px;margin:0;flex:1}
+.icon-btn{width:38px;height:38px;border-radius:12px;border:1px solid var(--line);background:var(--surface-1);cursor:pointer;font-size:17px}
+.sub{font-size:12px;color:var(--text-muted)}
+.seg{display:flex;background:var(--surface-2);border-radius:12px;padding:3px;margin-top:10px}
+.seg button{flex:1;border:0;background:none;padding:7px 0;border-radius:9px;font-size:14px;color:var(--text-secondary);cursor:pointer}
+.seg button.on{background:var(--surface-1);color:var(--text-primary);font-weight:700;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.offline{display:none;margin-top:6px;font-size:12px;color:var(--gold)}
+main{padding:0 12px calc(84px + env(safe-area-inset-bottom))}
+.view{display:none}.view.on{display:block}
+
+.search{width:100%;margin-top:10px;padding:10px 14px;border-radius:12px;border:1px solid var(--line);background:var(--surface-1);outline:none}
+.chips{display:flex;gap:6px;overflow-x:auto;padding:8px 0 2px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface-1);font-size:13px;color:var(--text-secondary);cursor:pointer}
+.chip.on{background:var(--text-primary);color:var(--bg);border-color:var(--text-primary)}
+.row{display:flex;gap:6px;padding-top:6px}
+.row select{flex:1;min-width:0;padding:7px 8px;border-radius:10px;border:1px solid var(--line);background:var(--surface-1);font-size:13px}
+.count{font-size:12px;color:var(--text-muted);padding:8px 4px 4px}
+
+.card{display:flex;gap:12px;background:var(--surface-1);border-radius:var(--radius);padding:10px;margin:8px 0;cursor:pointer;position:relative}
+.card img,.ph{width:76px;height:76px;object-fit:contain;border-radius:10px;background:#fff;flex:none}
+.card .body{flex:1;min-width:0;padding-right:28px}
+.brand{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted)}
+.name{font-weight:700;font-size:15px;margin:1px 0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.kind{font-size:12px;color:var(--text-secondary)}
+.prices{margin-top:4px;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.price{font-weight:700;font-size:16px}
+.old{color:var(--text-muted);text-decoration:line-through;font-size:13px}
+.per{font-size:11px;color:var(--text-muted)}
+.tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:4px}
+.tag{font-size:11px;font-weight:700;padding:2px 7px;border-radius:999px;border:1px solid var(--line);color:var(--text-secondary)}
+.tag.sale{background:var(--sale);border-color:var(--sale);color:#fff}
+.tag.new{background:var(--new);border-color:var(--new);color:#fff}
+.tag.low{border-color:var(--good);color:var(--good)}
+.tag.out{color:var(--text-muted)}
+.star{position:absolute;top:6px;right:6px;width:36px;height:36px;border:0;background:none;font-size:20px;color:var(--text-muted);cursor:pointer}
+.star.on{color:var(--gold)}
+.more{display:block;width:100%;margin:10px 0;padding:12px;border-radius:12px;border:1px solid var(--line);background:var(--surface-1);cursor:pointer}
+.empty{text-align:center;color:var(--text-muted);padding:40px 16px}
+
+nav{position:fixed;left:0;right:0;bottom:0;z-index:6;display:flex;background:var(--surface-1);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
+nav button{flex:1;border:0;background:none;padding:10px 0 8px;font-size:11px;color:var(--text-muted);cursor:pointer}
+nav button b{display:block;font-size:20px;line-height:1.1;font-weight:400}
+nav button.on{color:var(--text-primary)}
+
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.tile{background:var(--surface-1);border-radius:var(--radius);padding:12px}
+.tile .v{font-size:26px;font-weight:700}
+.tile .l{font-size:12px;color:var(--text-secondary)}
+.panel{background:var(--surface-1);border-radius:var(--radius);padding:12px;margin-top:10px}
+.panel h2{font-size:15px;margin:0 0 2px}
+.panel .sub{margin-bottom:8px}
+.bars{display:grid;grid-template-columns:auto 1fr auto;gap:6px 8px;align-items:center;font-size:13px}
+.bars .lbl{color:var(--text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px}
+.bars .track{height:14px}
+.bars .bar{height:14px;background:var(--series-1);border-radius:0 4px 4px 0;min-width:2px}
+.bars .val{color:var(--text-primary);font-variant-numeric:tabular-nums}
+.bars .hit{display:contents}
+.bars .hit:hover .bar,.bars .hit:focus .bar{filter:brightness(1.25)}
+.mini{display:flex;justify-content:space-between;gap:8px;padding:8px 0;border-top:1px solid var(--line);cursor:pointer;font-size:13px}
+.mini:first-of-type{border-top:0}
+.mini .r{font-weight:700;white-space:nowrap}
+.btn{display:block;text-align:center;margin-top:12px;padding:12px;border-radius:12px;background:var(--text-primary);color:var(--bg);text-decoration:none;font-weight:700;border:0;width:100%;cursor:pointer}
+.btn2{display:block;text-align:center;background:var(--surface-2);color:var(--text-primary);border:0;width:100%;margin-top:8px;padding:12px;border-radius:12px;cursor:pointer;text-decoration:none}
+
+.sheet-bg{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9;display:none}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:10;background:var(--surface-1);border-radius:18px 18px 0 0;max-height:92vh;overflow:auto;
+  padding:12px 16px calc(20px + env(safe-area-inset-bottom));transform:translateY(100%);visibility:hidden;transition:transform .22s,visibility 0s .22s}
+.sheet.on{transform:none;visibility:visible;transition:transform .22s}.sheet-bg.on{display:block}
+.sheet{max-width:680px;margin:0 auto}
+.sheet-head{position:sticky;top:-12px;z-index:3;background:var(--surface-1);margin:-12px -16px 0;padding:10px 12px 6px;display:flex;align-items:center}
+.grab{width:40px;height:4px;border-radius:2px;background:var(--line);margin:0 auto}
+.close{position:absolute;right:12px;top:8px;width:36px;height:36px;border-radius:50%;border:0;background:var(--surface-2);
+  color:var(--text-primary);font-size:18px;line-height:36px;cursor:pointer}
+.hero{display:flex;gap:14px;align-items:center}
+.hero img{width:110px;height:110px;object-fit:contain;background:#fff;border-radius:12px}
+.hero .name{white-space:normal}
+.sizes{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0 4px}
+.size{border:1px solid var(--line);background:var(--surface-2);border-radius:10px;padding:6px 10px;cursor:pointer;text-align:left;font-size:13px}
+.size.on{border-color:var(--text-primary)}
+.size small{display:block;color:var(--text-muted);font-size:11px}
+.size .d{color:var(--sale);font-weight:700}
+.facts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
+.fact{background:var(--surface-2);border-radius:10px;padding:8px 10px}
+.fact .v{font-weight:700}.fact .l{font-size:11px;color:var(--text-muted)}
+h3{font-size:15px;margin:16px 0 6px}
+.notes{display:grid;gap:6px}
+.note{background:var(--surface-2);border-radius:10px;padding:8px 10px;font-size:13px}
+.note b{display:block;font-size:11px;color:var(--text-muted);font-weight:400;text-transform:uppercase;letter-spacing:.05em}
+.desc{font-size:13px;color:var(--text-secondary);line-height:1.45}
+.chart{position:relative}
+.chart svg{display:block;width:100%;height:auto;overflow:visible}
+.tip{position:absolute;pointer-events:none;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:5px 8px;font-size:12px;display:none;white-space:nowrap}
+.tip b{display:block;font-size:14px}
+details{margin-top:8px;font-size:13px;color:var(--text-secondary)}
+table{width:100%;border-collapse:collapse;font-size:13px;margin-top:6px}
+td,th{padding:4px;text-align:left;border-bottom:1px solid var(--line)}
+th{color:var(--text-muted);font-weight:400}
+textarea{width:100%;height:90px;border-radius:10px;border:1px solid var(--line);background:var(--surface-2);font:12px monospace;padding:8px;color:var(--text-primary)}
+/* --- v3 additions --- */
+/* wide screens: keep a centred, phone-like column */
+header,main{max-width:760px;margin-left:auto;margin-right:auto}
+nav{justify-content:center}
+nav button{max-width:190px}
+.lang{width:auto;padding:0 10px;font-size:13px;font-weight:700}
+.intro{padding:6px 2px 2px}
+.intro h2{font-size:20px;margin:6px 0 4px}
+.intro p{margin:0;color:var(--text-secondary);font-size:14px}
+.tiles3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.tiles3 .tile{padding:10px;text-align:center;cursor:pointer}
+.tiles3 .tile .v{font-size:22px}
+.legend{display:grid;gap:6px;font-size:13px;color:var(--text-secondary)}
+.legend div{display:flex;gap:8px;align-items:center}
+.disclaimer{font-size:12px;color:var(--text-muted);line-height:1.45;padding:14px 4px 4px}
+.disclaimer a{color:inherit}
+.about h3{margin-top:14px}
+.about p,.about li{font-size:14px;color:var(--text-secondary);line-height:1.5}
+.about ul{padding-left:18px;margin:6px 0}
+.share{background:#25d366;color:#fff}
+</style>
+</head>
+<body>
+<header>
+  <div class="top">
+    <h1 id="title" data-i18n="app_name"></h1>
+    <button class="icon-btn lang" id="langBtn" aria-label="Language"></button>
+    <button class="icon-btn" id="infoBtn" aria-label="About">ⓘ</button>
+    <button class="icon-btn" id="themeBtn" aria-label="Theme"></button>
+  </div>
+  <div class="sub" id="updated"></div>
+  <div class="offline" id="offline" data-i18n="offline"></div>
+  <div class="seg" id="genders">
+    <button data-g="men" data-i18n="men"></button><button data-g="women" data-i18n="women"></button><button data-g="unisex" data-i18n="unisex"></button>
+  </div>
+</header>
+
+<main>
+  <section class="view on" id="v-home"></section>
+
+  <section class="view" id="v-deals">
+    <input class="search" id="q" type="search" data-i18n-ph="search" autocomplete="off">
+    <div class="chips" id="chips"></div>
+    <div class="row">
+      <select id="brand"></select>
+      <select id="mind"></select>
+      <select id="sort"></select>
+    </div>
+    <div class="count" id="count"></div>
+    <div id="list"></div>
+  </section>
+
+  <section class="view" id="v-watch">
+    <div class="count" id="wcount"></div>
+    <div id="wlist"></div>
+    <div class="panel" id="sync" hidden>
+      <h2>Email alerts for your watchlist</h2>
+      <div class="sub">The daily email can warn you when a starred perfume goes on sale or drops in price.
+        Copy your list, then paste it into <b>watchlist.txt</b> on GitHub and commit.</div>
+      <textarea id="watchText" readonly></textarea>
+      <button class="btn" id="copyWatch">Copy my list</button>
+      <a class="btn2" id="editWatch" target="_blank" rel="noopener">Open watchlist.txt on GitHub</a>
+    </div>
+  </section>
+
+  <section class="view" id="v-stats"></section>
+</main>
+
+<nav>
+  <button class="on" data-v="home"><b>🏠</b><span data-i18n="nav_home"></span></button>
+  <button data-v="deals"><b>🏷️</b><span data-i18n="nav_deals"></span></button>
+  <button data-v="watch"><b>⭐</b><span data-i18n="nav_watch"></span></button>
+  <button data-v="stats"><b>📊</b><span data-i18n="nav_stats"></span></button>
+</nav>
+
+<div class="sheet-bg" id="sheetBg"></div>
+<div class="sheet" id="sheet" role="dialog" aria-modal="true"></div>
+
+<script>
+"use strict";
+// ---------------- settings ----------------
+// Visit counter (optional): create a free site at goatcounter.com, then put its code here, e.g. "promos-parfums".
+const GOATCOUNTER = "";
+
+const $ = (s, r = document) => r.querySelector(s);
+const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+const fold = s => (s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+const store = {
+  get(k, d) { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
+};
+const V = { size: 0, ml: 1, p: 2, o: 3, d: 4, st: 5, lo: 6, hi: 7, sample: 8 };   // variant columns
+
+// ---------------- language ----------------
+const T = {
+  fr: {
+    app_name: "Promos Parfums", nav_home: "Accueil", nav_deals: "Promos", nav_watch: "Favoris", nav_stats: "Stats",
+    title_home: "Promos Parfums", title_deals: "Promos", title_watch: "Mes favoris", title_stats: "Statistiques",
+    men: "Homme", women: "Femme", unisex: "Mixte", offline: "Hors ligne - dernières données enregistrées",
+    updated: "Mis à jour le {d}", deals_n: "{n} promos", loading: "Chargement…",
+    load_err: "Impossible de charger les données.", no_data: "Pas encore de données.",
+    search: "Rechercher un parfum ou une marque",
+    c_sale: "En promo", c_famous: "Célèbres", c_new: "Nouveau", c_low: "Prix le plus bas", c_notes: "Avec notes", c_stock: "En stock",
+    all_brands: "Toutes les marques", any_disc: "Toute remise",
+    s_fame: "Les plus connus", s_disc: "Plus grosse remise", s_save: "Plus grosse économie", s_best: "Meilleures ventes",
+    s_pm: "Moins cher au 100 ml", s_pasc: "Prix croissant", s_pdesc: "Prix décroissant",
+    n_perfumes: "{n} parfum(s)", none_match: "Aucun parfum ne correspond à ces filtres.", show_more: "Afficher plus ({n})",
+    per100: "{p} / 100 ml", t_new: "NOUVEAU", t_low: "Prix le plus bas", t_famous: "#{n} célèbre", t_best: "#{n} ventes",
+    t_notes: "Notes", t_out: "Rupture", t_since: "↓ {p} depuis ⭐",
+    w_count: "{a} en promo sur {b} favoris", w_empty: "Touchez ☆ sur un parfum pour le suivre ici. Vos favoris restent sur ce téléphone.",
+    today_t: "Promos aujourd'hui", today_s: "Touchez une catégorie pour tout voir",
+    hero_t: "Les meilleures promos parfum au Maroc",
+    hero_p: "Toutes les promos de Kosmenia, vérifiées chaque matin : chaque taille, le prix au 100 ml et l'historique des prix.",
+    top_t: "Top promos du jour", top_s: "Les plus grosses remises sur les parfums célèbres",
+    new_t: "Nouvelles promos", new_s: "Apparues depuis hier",
+    legend_t: "Comment lire les badges",
+    l_sale: "remise actuelle", l_new: "promo apparue ou augmentée depuis hier", l_low: "le prix le plus bas que nous ayons vu",
+    l_famous: "classement de célébrité (parfums les plus connus)", l_best: "classement des meilleures ventes Kosmenia",
+    see_all: "Voir toutes les promos {g}",
+    disclaimer: "Site indépendant, non affilié à Kosmenia. Les prix sont relevés une fois par jour et peuvent changer : vérifiez toujours le prix sur Kosmenia avant d'acheter.",
+    st_sale: "parfums en promo", st_famous: "célèbres en promo", st_new: "nouvelles promos", st_low: "au prix le plus bas",
+    st_best: "meilleure remise", st_avg: "remise moyenne",
+    p_best: "Meilleures affaires (parfums célèbres)", p_best_s: "Plus grosses remises parmi les parfums connus",
+    p_value: "Meilleur prix au 100 ml", p_value_s: "Parfums célèbres en promo, les moins chers au 100 ml",
+    p_brand: "Promos par marque", p_brand_s: "Nombre de parfums en promo, 12 premières marques",
+    p_levels: "Niveaux de remise", p_levels_s: "Nombre de parfums par niveau de remise",
+    p_drops: "Plus fortes baisses de prix", p_drops_s: "Depuis le relevé précédent", p_drops_none: "Pas encore de baisse : l'historique se remplit chaque jour.",
+    u_deals: "promos", u_perfumes: "parfums",
+    sample: "Échantillon {ml}", sold_out: "épuisé", price_of: "Prix {s}", was: "(au lieu de {p})", discount: "Remise",
+    not_sale: "Pas en promo", save_x: "économie {p}", per100_l: "Prix au 100 ml", lowest_seen: "Prix le plus bas vu",
+    fame_rank: "Classement célébrité", sales_rank: "Classement ventes Kosmenia", history: "Historique du prix",
+    no_hist: "Pas encore d'historique.", table: "Voir le tableau des prix", th: ["Date", "Prix", "Avant"],
+    notes_t: "Notes olfactives", n_top: "Notes de tête", n_heart: "Notes de cœur", n_base: "Notes de fond",
+    desc_t: "Description", no_notes: "Notes non indiquées par Kosmenia - voir Fragrantica.",
+    open_k: "Voir sur Kosmenia", frag: "Rechercher sur Fragrantica", share: "Partager sur WhatsApp",
+    w_add: "☆ Ajouter aux favoris", w_rem: "★ Retirer des favoris", close: "Fermer",
+    share_txt: "{name} à {p}{disc} 👉 {url}", share_disc: " (-{d}%)",
+    about_t: "Comment ça marche ?",
+    about_html: [
+      ["Ce que fait ce site", "Chaque matin, un programme lit toutes les fiches parfum de Kosmenia (homme, femme et mixte) : chaque taille, son prix, sa remise et son stock. Il garde un historique des prix pour repérer les vraies bonnes affaires."],
+      ["Les classements", "« Célèbre » vient d'une liste des parfums les plus connus (style Fragrantica). « Ventes » est l'ordre des meilleures ventes affiché par Kosmenia."],
+      ["Vos favoris", "Touchez ☆ pour suivre un parfum. Vos favoris sont enregistrés uniquement sur votre téléphone : aucun compte, aucune donnée envoyée."],
+      ["Important", "Site indépendant et gratuit, non affilié à Kosmenia. Les photos et descriptions appartiennent à Kosmenia. Les prix peuvent changer pendant la journée : vérifiez toujours sur Kosmenia avant d'acheter."],
+    ],
+    install: "Astuce : ajoutez ce site à votre écran d'accueil (menu du navigateur → « Ajouter à l'écran d'accueil ») pour l'ouvrir comme une application.",
+  },
+  en: {
+    app_name: "Perfume deals", nav_home: "Home", nav_deals: "Deals", nav_watch: "Watchlist", nav_stats: "Stats",
+    title_home: "Perfume deals", title_deals: "Deals", title_watch: "Watchlist", title_stats: "Stats",
+    men: "Men", women: "Women", unisex: "Unisex", offline: "Offline - showing the last saved data",
+    updated: "Updated {d}", deals_n: "{n} deals", loading: "Loading…",
+    load_err: "Could not load the data.", no_data: "No data yet.",
+    search: "Search a perfume or brand",
+    c_sale: "On sale", c_famous: "Famous", c_new: "New", c_low: "Lowest price", c_notes: "With notes", c_stock: "In stock",
+    all_brands: "All brands", any_disc: "Any discount",
+    s_fame: "Most famous", s_disc: "Biggest discount", s_save: "Biggest saving", s_best: "Best sellers",
+    s_pm: "Cheapest per 100 ml", s_pasc: "Price: low to high", s_pdesc: "Price: high to low",
+    n_perfumes: "{n} perfume(s)", none_match: "No perfume matches these filters.", show_more: "Show more ({n})",
+    per100: "{p} / 100 ml", t_new: "NEW", t_low: "Lowest price", t_famous: "#{n} famous", t_best: "#{n} best seller",
+    t_notes: "Notes", t_out: "Sold out", t_since: "↓ {p} since ⭐",
+    w_count: "{a} on sale out of {b} in your watchlist", w_empty: "Tap ☆ on a perfume to follow it here. Your watchlist stays on this phone.",
+    today_t: "Deals today", today_s: "Tap a collection to see them all",
+    hero_t: "The best perfume deals in Morocco",
+    hero_p: "Every Kosmenia promotion, checked every morning: each size, the price per 100 ml and the price history.",
+    top_t: "Top deals today", top_s: "Biggest discounts on famous perfumes",
+    new_t: "New deals", new_s: "Since yesterday",
+    legend_t: "How to read the badges",
+    l_sale: "current discount", l_new: "deal started or got bigger since yesterday", l_low: "the lowest price we have seen",
+    l_famous: "fame ranking (best-known perfumes)", l_best: "Kosmenia best-seller ranking",
+    see_all: "See all {g} deals",
+    disclaimer: "Independent site, not affiliated with Kosmenia. Prices are checked once a day and can change: always confirm the price on Kosmenia before buying.",
+    st_sale: "perfumes on sale", st_famous: "famous on sale", st_new: "new deals", st_low: "at their lowest price",
+    st_best: "best discount", st_avg: "average discount",
+    p_best: "Best deals on famous perfumes", p_best_s: "Biggest discounts among well-known perfumes",
+    p_value: "Best value per 100 ml", p_value_s: "Famous perfumes on sale, cheapest per 100 ml",
+    p_brand: "Deals by brand", p_brand_s: "Number of perfumes on sale, top 12 brands",
+    p_levels: "Discount levels", p_levels_s: "Number of perfumes at each discount",
+    p_drops: "Biggest price drops", p_drops_s: "Since the previous run", p_drops_none: "No drops yet: the history fills up every day.",
+    u_deals: "deals", u_perfumes: "perfumes",
+    sample: "Sample {ml}", sold_out: "sold out", price_of: "Price {s}", was: "(was {p})", discount: "Discount",
+    not_sale: "Not on sale", save_x: "save {p}", per100_l: "Price per 100 ml", lowest_seen: "Lowest price seen",
+    fame_rank: "Fame rank", sales_rank: "Kosmenia sales rank", history: "Price history",
+    no_hist: "No history yet.", table: "Show the price table", th: ["Date", "Price", "Was"],
+    notes_t: "Fragrance notes", n_top: "Top notes", n_heart: "Heart notes", n_base: "Base notes",
+    desc_t: "Description", no_notes: "Notes not listed by Kosmenia - see Fragrantica.",
+    open_k: "Open on Kosmenia", frag: "Search on Fragrantica", share: "Share on WhatsApp",
+    w_add: "☆ Add to watchlist", w_rem: "★ Remove from watchlist", close: "Close",
+    share_txt: "{name} at {p}{disc} 👉 {url}", share_disc: " (-{d}%)",
+    about_t: "How does it work?",
+    about_html: [
+      ["What this site does", "Every morning, a program reads every Kosmenia perfume page (men, women and unisex): each size, its price, discount and stock. It keeps a price history to spot the real bargains."],
+      ["Rankings", "\"Famous\" comes from a list of the best-known perfumes (Fragrantica-style). \"Best seller\" is the best-selling order shown by Kosmenia."],
+      ["Your watchlist", "Tap ☆ to follow a perfume. Your watchlist is saved only on your phone: no account, no data sent anywhere."],
+      ["Important", "Independent, free site, not affiliated with Kosmenia. Photos and descriptions belong to Kosmenia. Prices can change during the day: always check on Kosmenia before buying."],
+    ],
+    install: "Tip: add this site to your home screen (browser menu → \"Add to Home screen\") to open it like an app.",
+  },
+};
+let lang = store.get("kos_lang", (navigator.language || "fr").toLowerCase().startsWith("en") ? "en" : "fr");
+const t = (k, vars = {}) => String(T[lang][k] ?? T.en[k] ?? k).replace(/\{(\w+)\}/g, (_, v) => vars[v] ?? "");
+const locale = () => lang === "fr" ? "fr-FR" : "en-GB";
+const num = v => v.toLocaleString(locale(), { maximumFractionDigits: 0, useGrouping: true }).replace(/[\u202f\u00a0]/g, "\u00a0");
+const dh = v => v == null ? "–" : num(v) + "\u00a0DH";
+const fmtDate = iso => iso ? new Date(iso + "T00:00:00").toLocaleDateString(locale(), { day: "numeric", month: "short", year: "numeric" }) : "–";
+const shortDate = ms => new Date(ms).toLocaleDateString(locale(), { day: "numeric", month: "short" });
+
+function applyStaticText() {
+  document.documentElement.lang = lang;
+  document.querySelectorAll("[data-i18n]").forEach(e => e.textContent = t(e.dataset.i18n));
+  document.querySelectorAll("[data-i18n-ph]").forEach(e => e.placeholder = t(e.dataset.i18nPh));
+  $("#langBtn").textContent = lang === "fr" ? "EN" : "FR";
+  const fill = (sel, opts) => { const s = $(sel), cur = s.value; s.replaceChildren(...opts.map(([v, l]) => new Option(l, v))); if (cur) s.value = cur; };
+  fill("#mind", [["0", t("any_disc")], ["10", "≥ 10 %"], ["15", "≥ 15 %"], ["20", "≥ 20 %"], ["30", "≥ 30 %"]]);
+  fill("#sort", ["fame", "disc", "save", "best", "pm", "pasc", "pdesc"].map(k => [k, t("s_" + k)]));
+  $("#chips").replaceChildren(); buildChips();
+  $("#title").textContent = t("title_" + currentView);
+}
+$("#langBtn").onclick = () => { lang = lang === "fr" ? "en" : "fr"; store.set("kos_lang", lang); refreshAll(); };
+
+// ---------------- theme ----------------
+const THEMES = ["auto", "dark", "light"], THEME_ICON = { auto: "🌗", dark: "🌙", light: "☀️" };
+let theme = store.get("kos_theme", "auto");
+function applyTheme() {
+  if (theme === "auto") delete document.documentElement.dataset.theme; else document.documentElement.dataset.theme = theme;
+  $("#themeBtn").textContent = THEME_ICON[theme]; $("#themeBtn").title = theme;
+  try { localStorage.setItem("kos_theme", theme); } catch {}
+}
+$("#themeBtn").onclick = () => { theme = THEMES[(THEMES.indexOf(theme) + 1) % 3]; applyTheme(); };
+applyTheme();
+
+// ---------------- data ----------------
+let gender = store.get("kos_gender", "men"), currentView = "home";
+const CACHE = {}, DETAILS = {}, HIST = {};
+let HOME = null;
+let watch = store.get("kos_watch2", {});      // "g|handle" -> {p, d}
+let fileWatch = new Set();                     // handles from docs/watchlist.txt (owner only)
+// Owner mode: open the app once with ?owner in the address. Only then are the email-alert
+// panel and the synced watchlist.txt shown - visitors get a plain, personal watchlist.
+const qs = new URLSearchParams(location.search);
+if (qs.has("owner")) { store.set("kos_owner", true); history.replaceState(null, "", location.pathname + location.hash); }
+if (qs.has("visitor")) { store.set("kos_owner", false); history.replaceState(null, "", location.pathname + location.hash); }
+const OWNER = store.get("kos_owner", false) === true;
+
+function prep(x) {
+  x.key = x.g + "|" + x.h;
+  x.atLow = x.s && x.lo != null && x.p <= x.lo && x.hi > x.p;     // only once it has been higher before
+  x.hay = fold(x.b + " " + x.n + " " + x.k);
+  return x;
+}
+async function loadGender(g) {
+  if (CACHE[g]) return CACHE[g];
+  const j = await (await fetch(`data/${g}.json`)).json();
+  j.items.forEach(x => { x.g = g; prep(x); });
+  j.by = Object.fromEntries(j.items.map(x => [x.h, x]));
+  return CACHE[g] = j;
+}
+async function loadHome() {
+  if (HOME) return HOME;
+  HOME = await (await fetch("data/home.json")).json();
+  HOME.top.forEach(prep); HOME.new.forEach(prep);
+  return HOME;
+}
+async function lazy(cache, file, g) {
+  if (!cache[g]) { try { cache[g] = await (await fetch(`data/${file}-${g}.json`)).json(); } catch { cache[g] = {}; } }
+  return cache[g];
+}
+async function loadFileWatch() {
+  if (!OWNER) return;
+  $("#sync").hidden = false;
+  try {
+    const txt = await (await fetch("watchlist.txt", { cache: "no-store" })).text();
+    fileWatch = new Set(txt.split("\n").map(l => l.split("#")[0].trim()).filter(Boolean));
+  } catch {}
+}
+
+const state = { q: "", sale: true, famous: false, isnew: false, low: false, notes: false, stock: true, brand: "", mind: 0, sort: "fame", limit: 60 };
+const CHIPS = [["sale", "c_sale"], ["famous", "c_famous"], ["isnew", "c_new"], ["low", "c_low"], ["notes", "c_notes"], ["stock", "c_stock"]];
+
+function setUpdated(d, n) { $("#updated").textContent = d ? t("updated", { d: fmtDate(d) }) + (n != null ? " · " + t("deals_n", { n }) : "") : ""; }
+
+async function selectGender(g) {
+  gender = g; store.set("kos_gender", g);
+  document.querySelectorAll("#genders button").forEach(b => b.classList.toggle("on", b.dataset.g === g));
+  try {
+    const data = await loadGender(g);
+    if (currentView !== "home") setUpdated(data.updated, data.items.filter(x => x.s).length);
+    const sel = $("#brand"); sel.replaceChildren(new Option(t("all_brands"), ""));
+    [...new Set(data.items.map(x => x.b).filter(Boolean))].sort((a, b) => a.localeCompare(b)).forEach(b => sel.append(new Option(b, b)));
+    state.brand = ""; state.limit = 60;
+    renderDeals(); renderStats();
+  } catch {
+    $("#updated").textContent = t("load_err");
+    $("#list").replaceChildren(el("div", "empty", t("no_data")));
+  }
+}
+document.querySelectorAll("#genders button").forEach(b => b.onclick = () => selectGender(b.dataset.g));
+
+// ---------------- cards ----------------
+function isWatched(x) { return !!watch[x.key] || fileWatch.has(x.h); }
+function card(x, showGender) {
+  const c = el("div", "card");
+  if (x.i) { const img = el("img"); img.src = x.i; img.loading = "lazy"; img.alt = ""; c.append(img); } else c.append(el("div", "ph"));
+  const b = el("div", "body");
+  b.append(el("div", "brand", x.b + (showGender ? " · " + t(x.g) : "")), el("div", "name", x.n), el("div", "kind", x.k + (x.sz ? " · " + x.sz : "")));
+  const pr = el("div", "prices"); pr.append(el("span", "price", dh(x.p)));
+  if (x.o) pr.append(el("span", "old", dh(x.o)));
+  if (x.pm) pr.append(el("span", "per", t("per100", { p: dh(x.pm) })));
+  b.append(pr);
+  const tags = el("div", "tags");
+  if (x.s) tags.append(el("span", "tag sale", "-" + x.d + " %"));
+  if (x.nw) tags.append(el("span", "tag new", t("t_new")));
+  if (x.atLow) tags.append(el("span", "tag low", t("t_low")));
+  if (x.f) tags.append(el("span", "tag", t("t_famous", { n: x.f })));
+  else if (x.r && x.r <= 100) tags.append(el("span", "tag", t("t_best", { n: x.r })));
+  if (x.nt) tags.append(el("span", "tag", t("t_notes")));
+  if (!x.st) tags.append(el("span", "tag out", t("t_out")));
+  const w = watch[x.key];
+  if (w && w.p && x.p < w.p) tags.append(el("span", "tag low", t("t_since", { p: dh(w.p - x.p) })));
+  b.append(tags); c.append(b);
+  const s = el("button", "star" + (isWatched(x) ? " on" : ""), isWatched(x) ? "★" : "☆");
+  s.setAttribute("aria-label", t("nav_watch"));
+  s.onclick = e => { e.stopPropagation(); toggleWatch(x); s.classList.toggle("on", isWatched(x)); s.textContent = isWatched(x) ? "★" : "☆"; };
+  c.append(s);
+  c.onclick = () => openSheet(x);
+  return c;
+}
+
+// ---------------- home ----------------
+async function renderHome() {
+  const v = $("#v-home"); v.replaceChildren(el("div", "empty", t("loading")));
+  let H;
+  try { H = await loadHome(); } catch { v.replaceChildren(el("div", "empty", t("no_data"))); return; }
+  v.replaceChildren();
+  if (currentView === "home") setUpdated(H.updated);
+  const hero = el("div", "intro"); hero.append(el("h2", null, t("hero_t")), el("p", null, t("hero_p"))); v.append(hero);
+  const today = el("div", "panel"); today.append(el("h2", null, t("today_t")), el("div", "sub", t("today_s"))); v.append(today);
+  const tiles = el("div", "tiles3");
+  for (const g of ["men", "women", "unisex"]) {
+    const tl = el("div", "tile"); tl.append(el("div", "v", String(H.counts[g] ?? 0)), el("div", "l", t(g)));
+    tl.onclick = () => { go("deals"); selectGender(g); }; tiles.append(tl);
+  }
+  v.append(tiles);
+  const p1 = el("div", "panel"); p1.append(el("h2", null, t("top_t")), el("div", "sub", t("top_s"))); v.append(p1);
+  H.top.forEach(x => v.append(card(x, true)));
+  if (H.new.length) {
+    const p2 = el("div", "panel"); p2.append(el("h2", null, t("new_t")), el("div", "sub", t("new_s"))); v.append(p2);
+    H.new.forEach(x => v.append(card(x, true)));
+  }
+  const lg = el("div", "panel"); lg.append(el("h2", null, t("legend_t")));
+  const L = el("div", "legend");
+  for (const [cls, txt, desc] of [["tag sale", "-10 %", "l_sale"], ["tag new", t("t_new"), "l_new"], ["tag low", t("t_low"), "l_low"],
+                                  ["tag", t("t_famous", { n: 1 }), "l_famous"], ["tag", t("t_best", { n: 5 }), "l_best"]]) {
+    const r = el("div"); r.append(el("span", cls, txt), document.createTextNode(t(desc))); L.append(r);
+  }
+  lg.append(L); v.append(lg);
+  const tip = el("div", "disclaimer", t("install")); v.append(tip);
+  const disc = el("div", "disclaimer", t("disclaimer")); v.append(disc);
+}
+
+// ---------------- deals ----------------
+function buildChips() {
+  for (const [k, label] of CHIPS) {
+    const c = el("button", "chip" + (state[k] ? " on" : ""), t(label));
+    c.onclick = () => { state[k] = !state[k]; c.classList.toggle("on", state[k]); state.limit = 60; renderDeals(); };
+    $("#chips").append(c);
+  }
+}
+const NONE = 1e9;
+const SORTS = {
+  fame: (a, b) => (a.f ?? NONE) - (b.f ?? NONE) || (a.r ?? NONE) - (b.r ?? NONE),
+  disc: (a, b) => b.d - a.d || (a.f ?? NONE) - (b.f ?? NONE),
+  save: (a, b) => b.save - a.save,
+  best: (a, b) => (a.r ?? NONE) - (b.r ?? NONE),
+  pm: (a, b) => (a.pm ?? NONE) - (b.pm ?? NONE),
+  pasc: (a, b) => a.p - b.p,
+  pdesc: (a, b) => b.p - a.p,
+};
+function filtered() {
+  const data = CACHE[gender]; if (!data) return [];
+  const q = fold(state.q).trim();
+  return data.items.filter(x =>
+    (!state.sale || x.s) && (!state.stock || x.st) && (!state.famous || x.f != null) && (!state.isnew || x.nw) &&
+    (!state.low || x.atLow) && (!state.notes || x.nt) && (!state.brand || x.b === state.brand) && x.d >= state.mind &&
+    (!q || q.split(/\s+/).every(w => x.hay.includes(w)))
+  ).sort(SORTS[state.sort]);
+}
+function renderDeals() {
+  const items = filtered(), list = $("#list");
+  list.replaceChildren();
+  $("#count").textContent = t("n_perfumes", { n: items.length });
+  if (!items.length) { list.append(el("div", "empty", CACHE[gender] ? t("none_match") : t("loading"))); return; }
+  items.slice(0, state.limit).forEach(x => list.append(card(x)));
+  if (items.length > state.limit) {
+    const m = el("button", "more", t("show_more", { n: items.length - state.limit }));
+    m.onclick = () => { state.limit += 60; renderDeals(); };
+    list.append(m);
+  }
+}
+$("#q").oninput = e => { state.q = e.target.value; state.limit = 60; renderDeals(); };
+$("#brand").onchange = e => { state.brand = e.target.value; state.limit = 60; renderDeals(); };
+$("#mind").onchange = e => { state.mind = +e.target.value; state.limit = 60; renderDeals(); };
+$("#sort").onchange = e => { state.sort = e.target.value; state.limit = 60; renderDeals(); };
+
+// ---------------- watchlist ----------------
+function toggleWatch(x) {
+  if (isWatched(x)) { delete watch[x.key]; fileWatch.delete(x.h); }
+  else watch[x.key] = { p: x.p, d: (CACHE[x.g] || HOME || {}).updated };
+  store.set("kos_watch2", watch); renderWatchText();
+  if (currentView === "watch") renderWatch();
+}
+function watchHandles() { return [...new Set([...Object.keys(watch).map(k => k.split("|")[1]), ...fileWatch])].sort(); }
+function renderWatchText() {
+  if (!OWNER) return;
+  const all = Object.values(CACHE).flatMap(d => d.items);
+  const names = Object.fromEntries(all.map(x => [x.h, x.b + " " + x.n + " " + x.k]));
+  $("#watchText").value = "# My watchlist - one perfume per line\n" + watchHandles().map(h => h + (names[h] ? "   # " + names[h] : "")).join("\n") + "\n";
+}
+async function renderWatch() {
+  const list = $("#wlist"); list.replaceChildren(el("div", "empty", t("loading")));
+  const wanted = new Set(watchHandles());
+  const genders = new Set(Object.keys(watch).map(k => k.split("|")[0]));
+  if (fileWatch.size) ["men", "women", "unisex"].forEach(g => genders.add(g));
+  await Promise.all([...genders].map(g => loadGender(g).catch(() => null)));
+  const items = Object.values(CACHE).flatMap(d => d.items).filter(x => wanted.has(x.h)).sort((a, b) => (b.s - a.s) || b.d - a.d);
+  list.replaceChildren();
+  $("#wcount").textContent = items.length ? t("w_count", { a: items.filter(x => x.s).length, b: items.length }) : "";
+  if (!items.length) list.append(el("div", "empty", t("w_empty")));
+  items.forEach(x => list.append(card(x, true)));
+  renderWatchText();
+}
+$("#copyWatch").onclick = async () => {
+  try { await navigator.clipboard.writeText($("#watchText").value); $("#copyWatch").textContent = "Copied ✓"; }
+  catch { $("#watchText").select(); $("#copyWatch").textContent = "Select and copy the text above"; }
+  setTimeout(() => $("#copyWatch").textContent = "Copy my list", 2500);
+};
+const SITE = (() => {   // owner.github.io/repo
+  const owner = location.hostname.split(".")[0], repo = location.pathname.split("/").filter(Boolean)[0] || "perfume-deals";
+  return { owner, repo, base: location.origin + "/" + (location.hostname.endsWith("github.io") ? repo + "/" : "") };
+})();
+$("#editWatch").href = `https://github.com/${SITE.owner}/${SITE.repo}/edit/main/docs/watchlist.txt`;
+
+// ---------------- stats ----------------
+function barList(rows, unit) {
+  const box = el("div", "bars"); const max = Math.max(...rows.map(r => r[1]), 1);
+  for (const [name, v] of rows) {
+    const hit = el("div", "hit"); hit.tabIndex = 0; hit.title = name + ": " + v + " " + unit;
+    const tr = el("div", "track"), bar = el("div", "bar"); bar.style.width = (v / max * 100) + "%"; tr.append(bar);
+    hit.append(el("div", "lbl", name), tr, el("div", "val", String(v)));
+    box.append(hit);
+  }
+  return box;
+}
+function mini(x, right) {
+  const m = el("div", "mini"); const l = el("div");
+  l.append(el("div", "name", x.b + " " + x.n), el("div", "kind", x.k + " · " + x.sz + " · " + dh(x.p)));
+  m.append(l, el("div", "r", right)); m.onclick = () => openSheet(x); return m;
+}
+function panel(title, sub) { const p = el("div", "panel"); p.append(el("h2", null, title), el("div", "sub", sub)); return p; }
+function renderStats() {
+  const v = $("#v-stats"); v.replaceChildren();
+  const data = CACHE[gender]; if (!data) return;
+  const sale = data.items.filter(x => x.s && x.st);
+  const avg = sale.length ? sale.reduce((s, x) => s + x.d, 0) / sale.length : 0;
+  const tiles = el("div", "tiles");
+  for (const [val, lab] of [[sale.length, "st_sale"], [sale.filter(x => x.f).length, "st_famous"], [sale.filter(x => x.nw).length, "st_new"],
+                            [sale.filter(x => x.atLow).length, "st_low"], ["-" + Math.max(0, ...sale.map(x => x.d)) + " %", "st_best"],
+                            ["-" + avg.toLocaleString(locale(), { maximumFractionDigits: 1 }) + " %", "st_avg"]]) {
+    const tl = el("div", "tile"); tl.append(el("div", "v", String(val)), el("div", "l", t(lab))); tiles.append(tl);
+  }
+  v.append(tiles);
+  const p1 = panel(t("p_best"), t(gender) + " - " + t("p_best_s"));
+  sale.filter(x => x.f).sort((a, b) => b.d - a.d || b.save - a.save).slice(0, 8).forEach(x => p1.append(mini(x, "-" + x.d + " %")));
+  const p5 = panel(t("p_value"), t("p_value_s"));
+  sale.filter(x => x.f && x.pm).sort((a, b) => a.pm - b.pm).slice(0, 6).forEach(x => p5.append(mini(x, dh(x.pm))));
+  const byBrand = {}; sale.forEach(x => byBrand[x.b] = (byBrand[x.b] || 0) + 1);
+  const p2 = panel(t("p_brand"), t("p_brand_s")); p2.append(barList(Object.entries(byBrand).sort((a, b) => b[1] - a[1]).slice(0, 12), t("u_deals")));
+  const byD = {}; sale.forEach(x => byD[x.d] = (byD[x.d] || 0) + 1);
+  const p3 = panel(t("p_levels"), t("p_levels_s")); p3.append(barList(Object.entries(byD).sort((a, b) => b[0] - a[0]).map(([d, n]) => ["-" + d + " %", n]), t("u_perfumes")));
+  const p4 = panel(t("p_drops"), t("p_drops_s")); const holder = el("div", null, t("loading")); p4.append(holder);
+  v.append(p1, p5, p2, p3, p4);
+  lazy(HIST, "history", gender).then(H => {
+    holder.replaceChildren();
+    const drops = data.items.map(x => {
+      const pts = (H[x.h] || {})[x.sz] || []; if (pts.length < 2) return null;
+      const [a, b] = pts.slice(-2); return b[0] === data.updated && b[1] < a[1] ? { x, drop: a[1] - b[1] } : null;
+    }).filter(Boolean).sort((a, b) => b.drop - a.drop).slice(0, 8);
+    if (!drops.length) { holder.append(el("div", "sub", t("p_drops_none"))); return; }
+    drops.forEach(({ x, drop }) => holder.append(mini(x, "↓ " + dh(drop))));
+  });
+}
+
+// ---------------- sheet (detail + about) ----------------
+let sheetHashSet = false;
+function hideSheet() { $("#sheet").classList.remove("on"); $("#sheetBg").classList.remove("on"); }
+function closeSheet() { if (history.state?.sheet) history.back(); else { hideSheet(); clearHash(); } }
+function clearHash() { if (location.hash) history.replaceState(null, "", location.pathname + location.search); }
+$("#sheetBg").onclick = closeSheet;
+addEventListener("popstate", () => { hideSheet(); });
+addEventListener("keydown", e => { if (e.key === "Escape" && $("#sheet").classList.contains("on")) closeSheet(); });
+
+function openPanel(hash) {
+  const s = $("#sheet");
+  const head = el("div", "sheet-head"), close = el("button", "close", "✕");
+  close.setAttribute("aria-label", t("close")); close.onclick = closeSheet;
+  head.append(el("div", "grab"), close);
+  s.replaceChildren(head); s.scrollTop = 0;
+  const url = location.pathname + location.search + (hash ? "#" + hash : "");
+  if (!s.classList.contains("on")) history.pushState({ sheet: true }, "", url); else history.replaceState({ sheet: true }, "", url);
+  s.classList.add("on"); $("#sheetBg").classList.add("on");
+  return s;
+}
+
+function openAbout() {
+  const s = openPanel("about");
+  const box = el("div", "about"); box.append(el("h2", null, t("about_t")));
+  for (const [h, p] of T[lang].about_html) box.append(el("h3", null, h), el("p", null, p));
+  box.append(el("p", "disclaimer", t("install")));
+  s.append(box);
+}
+$("#infoBtn").onclick = openAbout;
+
+async function openSheet(x) {
+  const s = openPanel("p=" + x.g + "/" + x.h);
+  const hero = el("div", "hero"); hero.style.display = "flex"; hero.style.gap = "14px"; hero.style.alignItems = "center";
+  if (x.i) { const img = el("img"); img.src = x.i; img.alt = ""; img.style.cssText = "width:110px;height:110px;object-fit:contain;background:#fff;border-radius:12px"; hero.append(img); }
+  const tt = el("div"); tt.append(el("div", "brand", x.b + " · " + t(x.g)), el("div", "name", x.n), el("div", "kind", x.k));
+  tt.querySelector(".name").style.whiteSpace = "normal";
+  hero.append(tt); s.append(hero);
+
+  let current = Math.max(0, x.v.findIndex(v => v[V.size] === x.sz));
+  const sizeBox = el("div", "sizes"), facts = el("div", "facts"), chartBox = el("div", "chart"), notesBox = el("div");
+  s.append(sizeBox, facts, el("h3", null, t("history")), chartBox, notesBox);
+  const updated = (CACHE[x.g] || HOME || {}).updated;
+  const H = lazy(HIST, "history", x.g);
+  function showSize(i) {
+    current = i; const v = x.v[i];
+    sizeBox.replaceChildren();
+    x.v.forEach((w, j) => {
+      const b = el("button", "size" + (j === i ? " on" : ""));
+      b.append(document.createTextNode(w[V.sample] ? t("sample", { ml: w[V.ml] ? w[V.ml] + " ml" : "" }) : w[V.size]));
+      const sm = el("small"); sm.append(document.createTextNode(dh(w[V.p]) + " "));
+      if (w[V.d]) sm.append(el("span", "d", "-" + w[V.d] + "%"));
+      if (!w[V.st]) sm.append(document.createTextNode(" · " + t("sold_out")));
+      b.append(sm); b.onclick = () => showSize(j); sizeBox.append(b);
+    });
+    facts.replaceChildren();
+    const per = v[V.ml] && !v[V.sample] ? dh(Math.round(v[V.p] / v[V.ml] * 100)) : "–";
+    for (const [val, lab] of [[dh(v[V.p]) + (v[V.o] ? " " + t("was", { p: dh(v[V.o]) }) : ""), t("price_of", { s: v[V.size] })],
+                              [v[V.d] ? "-" + v[V.d] + " % · " + t("save_x", { p: dh(v[V.o] - v[V.p]) }) : t("not_sale"), t("discount")],
+                              [per, t("per100_l")], [dh(v[V.lo]), t("lowest_seen")],
+                              [x.f ? "#" + x.f : "–", t("fame_rank")], [x.r ? "#" + x.r : "–", t("sales_rank")]]) {
+      const f = el("div", "fact"); f.append(el("div", "v", val), el("div", "l", lab)); facts.append(f);
+    }
+    chartBox.replaceChildren(el("div", "sub", t("loading")));
+    H.then(h => drawChart(chartBox, ((h[x.h] || {})[v[V.size]]) || [], updated));
+  }
+  showSize(current);
+
+  const shareUrl = SITE.base + "p/" + x.g + "/" + x.h + ".html";
+  const shareText = t("share_txt", { name: x.b + " " + x.n + " " + x.k + (x.sz ? " " + x.sz : ""), p: dh(x.p),
+                                     disc: x.s ? t("share_disc", { d: x.d }) : "", url: shareUrl });
+  const sh = el("button", "btn share", t("share"));
+  sh.onclick = async () => {
+    if (navigator.share) { try { await navigator.share({ title: x.b + " " + x.n, text: shareText }); return; } catch (e) { if (e.name === "AbortError") return; } }
+    open("https://wa.me/?text=" + encodeURIComponent(shareText), "_blank", "noopener");
+  };
+  const a = el("a", "btn2", t("open_k")); a.href = x.l; a.target = "_blank"; a.rel = "noopener";
+  const fr = el("a", "btn2", t("frag")); fr.target = "_blank"; fr.rel = "noopener";
+  fr.href = "https://www.fragrantica.com/search/?query=" + encodeURIComponent(x.b + " " + x.n);
+  const wb = el("button", "btn2", isWatched(x) ? t("w_rem") : t("w_add"));
+  wb.onclick = () => { toggleWatch(x); wb.textContent = isWatched(x) ? t("w_rem") : t("w_add"); renderDeals(); };
+  s.append(sh, a, fr, wb);
+
+  const D = (await lazy(DETAILS, "details", x.g))[x.h] || {};
+  notesBox.replaceChildren();
+  const n = D.notes || {};
+  if (n.top || n.heart || n.base) {
+    notesBox.append(el("h3", null, t("notes_t")));
+    const g = el("div", "notes");
+    for (const [k, lab] of [["top", "n_top"], ["heart", "n_heart"], ["base", "n_base"]]) {
+      if (n[k]) { const d = el("div", "note"); d.append(el("b", null, t(lab)), document.createTextNode(n[k])); g.append(d); }
+    }
+    notesBox.append(g);
+  }
+  if (D.desc) notesBox.append(el("h3", null, t("desc_t")), el("div", "desc", D.desc));
+  if (!(n.top || n.heart || n.base)) notesBox.append(el("div", "sub", t("no_notes")));
+}
+
+function drawChart(box, pts, updated) {
+  box.replaceChildren();
+  if (!pts.length) { box.append(el("div", "sub", t("no_hist"))); return; }
+  const series = pts.map(p => ({ t: new Date(p[0] + "T00:00:00").getTime(), v: p[1] }));
+  const lastT = new Date(updated + "T00:00:00").getTime();
+  if (series[series.length - 1].t < lastT) series.push({ ...series[series.length - 1], t: lastT, carry: true });
+  if (series.length === 1) series.push({ ...series[0], t: series[0].t + 864e5, carry: true });
+  const W = 340, H = 150, L = 46, R = 10, Tp = 10, B = 24;
+  const t0 = series[0].t, t1 = series[series.length - 1].t;
+  const vals = series.map(p => p.v), lo = Math.min(...vals), hi = Math.max(...vals);
+  const pad = Math.max((hi - lo) * 0.15, hi * 0.03), y0 = lo - pad, y1 = hi + pad;
+  const X = tm => L + (tm - t0) / (t1 - t0 || 1) * (W - L - R), Y = v => Tp + (1 - (v - y0) / (y1 - y0)) * (H - Tp - B);
+  const NS = "http://www.w3.org/2000/svg", mk = (n, a) => { const e = document.createElementNS(NS, n); for (const k in a) e.setAttribute(k, a[k]); return e; };
+  const svg = mk("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": t("history") });
+  const css = getComputedStyle(document.documentElement);
+  const ink = css.getPropertyValue("--text-muted"), grid = css.getPropertyValue("--line"), col = css.getPropertyValue("--series-1");
+  for (const v of [lo, hi].filter((v, i, a) => a.indexOf(v) === i)) {
+    svg.append(mk("line", { x1: L, x2: W - R, y1: Y(v), y2: Y(v), stroke: grid, "stroke-width": 1 }));
+    const tx = mk("text", { x: L - 6, y: Y(v) + 4, "text-anchor": "end", "font-size": 10, fill: ink }); tx.textContent = Math.round(v); svg.append(tx);
+  }
+  for (const [tm, anchor] of [[t0, "start"], [t1, "end"]]) {
+    const tx = mk("text", { x: X(tm), y: H - 6, "text-anchor": anchor, "font-size": 10, fill: ink }); tx.textContent = shortDate(tm); svg.append(tx);
+  }
+  let d = `M${X(series[0].t)},${Y(series[0].v)}`;
+  for (let i = 1; i < series.length; i++) d += ` H${X(series[i].t)} V${Y(series[i].v)}`;
+  svg.append(mk("path", { d, fill: "none", stroke: col, "stroke-width": 2, "stroke-linejoin": "round" }));
+  series.filter(p => !p.carry).forEach(p => svg.append(mk("circle", { cx: X(p.t), cy: Y(p.v), r: 4, fill: col, stroke: css.getPropertyValue("--surface-1"), "stroke-width": 2 })));
+  const hair = mk("line", { y1: Tp, y2: H - B, stroke: ink, "stroke-width": 1, visibility: "hidden" });
+  const dot = mk("circle", { r: 5, fill: col, visibility: "hidden" });
+  const hit = mk("rect", { x: L, y: 0, width: W - L - R, height: H, fill: "transparent", tabindex: 0 });
+  svg.append(hair, dot, hit); box.append(svg);
+  const tip = el("div", "tip"); box.append(tip);
+  const show = clientX => {
+    const r = svg.getBoundingClientRect(), sx = (clientX - r.left) / r.width * W;
+    const tm = t0 + (Math.min(Math.max(sx, L), W - R) - L) / (W - L - R) * (t1 - t0);
+    let p = series[0]; for (const q of series) if (q.t <= tm) p = q;
+    const px = X(Math.min(Math.max(tm, t0), t1));
+    hair.setAttribute("x1", px); hair.setAttribute("x2", px); dot.setAttribute("cx", px); dot.setAttribute("cy", Y(p.v));
+    hair.setAttribute("visibility", "visible"); dot.setAttribute("visibility", "visible");
+    tip.replaceChildren(el("b", null, dh(p.v)), document.createTextNode(shortDate(tm)));
+    tip.style.display = "block";
+    const left = px / W * r.width; tip.style.left = Math.min(Math.max(left - 40, 0), r.width - 90) + "px"; tip.style.top = "0px";
+  };
+  const hide = () => { tip.style.display = "none"; hair.setAttribute("visibility", "hidden"); dot.setAttribute("visibility", "hidden"); };
+  hit.addEventListener("pointermove", e => show(e.clientX)); hit.addEventListener("pointerdown", e => show(e.clientX));
+  hit.addEventListener("pointerleave", hide);
+  hit.addEventListener("focus", () => show(svg.getBoundingClientRect().right - 1)); hit.addEventListener("blur", hide);
+  const det = el("details"); det.append(el("summary", null, t("table")));
+  const tb = el("table"); const hr = el("tr"); T[lang].th.forEach(h => hr.append(el("th", null, h))); tb.append(hr);
+  pts.slice().reverse().forEach(p => { const tr = el("tr"); tr.append(el("td", null, fmtDate(p[0])), el("td", null, dh(p[1])), el("td", null, p[2] ? dh(p[2]) : "–")); tb.append(tr); });
+  det.append(tb); box.append(det);
+}
+
+// ---------------- navigation ----------------
+function go(view) {
+  currentView = view;
+  document.querySelectorAll("nav button").forEach(x => x.classList.toggle("on", x.dataset.v === view));
+  document.querySelectorAll(".view").forEach(v => v.classList.toggle("on", v.id === "v-" + view));
+  $("#title").textContent = t("title_" + view);
+  $("#genders").style.display = (view === "deals" || view === "stats") ? "" : "none";
+  if (view === "home") renderHome();
+  else if (view === "watch") { setUpdated(null); renderWatch(); }
+  else { const d = CACHE[gender]; if (d) setUpdated(d.updated, d.items.filter(x => x.s).length); }
+  window.scrollTo(0, 0);
+}
+document.querySelectorAll("nav button").forEach(b => b.onclick = () => go(b.dataset.v));
+
+function refreshAll() {
+  applyStaticText();
+  go(currentView);
+  if (CACHE[gender]) { selectGender(gender); }
+}
+
+// deep links: #p=<gender>/<handle> opens that perfume, #about opens the info panel
+async function openFromHash() {
+  const m = location.hash.match(/^#p=(men|women|unisex)\/([\w-]+)$/);
+  if (m) {
+    try { const d = await loadGender(m[1]); const x = d.by[m[2]]; if (x) { history.replaceState(null, "", location.pathname + location.search); openSheet(x); } }
+    catch {}
+  } else if (location.hash === "#about") { history.replaceState(null, "", location.pathname + location.search); openAbout(); }
+}
+
+// ---------------- offline + analytics ----------------
+const net = () => $("#offline").style.display = navigator.onLine ? "none" : "block";
+addEventListener("online", net); addEventListener("offline", net); net();
+if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
+if (GOATCOUNTER) {
+  const sc = document.createElement("script"); sc.async = true; sc.src = "https://gc.zgo.at/count.js";
+  sc.dataset.goatcounter = `https://${GOATCOUNTER}.goatcounter.com/count`; document.head.append(sc);
+}
+
+// ---------------- start ----------------
+applyStaticText();
+loadFileWatch().then(() => { go("home"); selectGender(gender); openFromHash(); });
+</script>
+</body>
+</html>
