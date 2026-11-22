@@ -95,3 +95,5 @@ To run it on your own computer instead: `pip install -r requirements.txt`, then 
 ## Disclaimer
 
 Personal, non-commercial project, not affiliated with Kosmenia. It reads the public collection pages once a day, with a pause between pages. Prices can change at any time; always check the price on the Kosmenia website before buying.
+
+Made for fun by Adnane AKA: KEYSTONE.
