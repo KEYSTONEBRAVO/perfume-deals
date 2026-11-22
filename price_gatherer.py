@@ -411,6 +411,61 @@ def load_watchlist():
 
 
 # ---------------------------------------------------------------------------
+# Bottle colours (for the app's glow and accents)
+# ---------------------------------------------------------------------------
+COLORS_FILE = os.path.join(DATA_DIR, "colors.json")
+MAX_NEW_COLORS = 1600     # new photos analysed per run (each one is read only once, then remembered)
+
+
+def dominant_color(image_bytes):
+    """Main colour of a bottle photo on a white background, e.g. '#354d69'.
+    Picks the strongest hue band; black / grey / clear bottles return their neutral tone."""
+    import colorsys
+    from io import BytesIO
+    from PIL import Image
+    img = Image.open(BytesIO(image_bytes)).convert("RGBA").resize((48, 48))
+    px = [(r, g, b) for r, g, b, a in img.getdata() if a >= 128 and not (r > 232 and g > 232 and b > 232)]
+    if len(px) < 30:
+        return None
+    bands, neutral = {}, []
+    for r, g, b in px:
+        h, sat, val = colorsys.rgb_to_hsv(r / 255, g / 255, b / 255)
+        if sat > 0.22 and val > 0.18:
+            band = bands.setdefault(int(h * 18) % 18, [0.0, []])
+            band[0] += sat * val
+            band[1].append((r, g, b))
+        else:
+            neutral.append((r, g, b))
+    weight = lambda k: bands.get(k, [0])[0] + 0.5 * (bands.get((k + 1) % 18, [0])[0] + bands.get((k - 1) % 18, [0])[0])
+    best = max(range(18), key=weight)
+    pick = bands[best][1] if bands.get(best) and weight(best) > len(px) * 0.04 else neutral
+    if not pick:
+        return None
+    return "#" + "".join(f"{round(sum(p[i] for p in pick) / len(pick)):02x}" for i in range(3))
+
+
+def add_colors(products):
+    cache = load_json(COLORS_FILE, {})
+    new = 0
+    for p in products:
+        key = (p["image"] or "").split("?")[0]
+        if key and key not in cache and new < MAX_NEW_COLORS:
+            new += 1
+            try:
+                r = requests.get(key + "?width=64", headers=HEADERS, timeout=20)
+                r.raise_for_status()
+                cache[key] = dominant_color(r.content) or ""
+            except Exception as e:                     # a missing photo never stops the run
+                print(f"  ! colour of {key} failed: {e}")
+                cache[key] = ""
+            time.sleep(0.1)
+        p["color"] = cache.get(key) or None
+    save_json(COLORS_FILE, cache, pretty=True)
+    if new:
+        print(f"Bottle colours: {new} new photos analysed.")
+
+
+# ---------------------------------------------------------------------------
 # App data
 # ---------------------------------------------------------------------------
 def app_item(p):
@@ -421,7 +476,7 @@ def app_item(p):
         "i": p["image"], "f": p["fame"], "r": p["rank"], "s": p["on_sale"], "st": p["in_stock"], "nw": p["new"],
         "d": p["discount"], "p": b["p"] if b else None, "o": b["o"] if b else None,
         "sz": b["size"] if b else "", "save": p["saving"], "pm": p["per100"], "nt": bool(p["notes"]),
-        "lo": b["lo"] if b else None, "hi": b["hi"] if b else None,
+        "lo": b["lo"] if b else None, "hi": b["hi"] if b else None, "c": p.get("color"),
         "v": [[v["size"], v["ml"], v["p"], v["o"], v["d"], v["st"], v["lo"], v["hi"], v["sample"]] for v in p["variants"]],
     }
 
@@ -649,6 +704,7 @@ def main():
 
     allp = [p for ps in by_gender.values() for p in ps]
     mark_new(allp)
+    add_colors(allp)
     for g, ps in by_gender.items():
         update_history(ps, g, today)
         export_app_data(ps, g, today)
