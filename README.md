@@ -1,4 +1,4 @@
-# 🏷️ Perfume deals
+# 🏷️ Perfume deals by Keystone
 
 A small personal project that tracks men's perfume promotions on [Kosmenia](https://kosmenia.ma/collections/parfum-homme) every day, then:
 
