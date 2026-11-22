@@ -262,6 +262,26 @@ h1{font-family:var(--serif);font-weight:700;font-size:28px;letter-spacing:.2px}
 .share{background:#25d366;color:#0b2e17}
 .note{border-left:3px solid var(--accent)}
 
+
+/* product colour: --pglow / --accent are set per product from its bottle colour */
+.flacon .halo{background:radial-gradient(circle,var(--pglow,var(--glow)) 0%,transparent 68%)}
+.flacon .kicker{color:var(--accent)}
+.d-hero .bottle{box-shadow:0 0 0 1px var(--line),0 0 60px 12px var(--pglow,var(--glow))}
+.flacon .bottle{box-shadow:0 0 0 1px var(--line),0 18px 44px -14px var(--pglow,var(--glow))}
+/* the photo is clipped to the circle: no square corners */
+.flacon .bottle,.d-hero .bottle{overflow:hidden}
+.flacon .bottle img,.d-hero .bottle img{width:74%;height:74%;object-fit:contain;mix-blend-mode:multiply}
+.card img{box-shadow:0 8px 22px -12px var(--pglow,transparent)}
+/* notes as ingredient chips with a small picture */
+.note-row{margin-bottom:12px}
+.note-row b{display:block;font-size:12px;color:var(--text-muted);font-weight:600;margin-bottom:6px}
+.ingr{display:flex;flex-wrap:wrap;gap:6px}
+.ing{display:inline-flex;align-items:center;gap:6px;padding:6px 11px 6px 7px;border-radius:999px;background:var(--surface-2);font-size:13.5px;border:1px solid var(--line)}
+.ing i{font-style:normal;font-size:16px;line-height:1;width:22px;height:22px;display:grid;place-items:center;border-radius:50%;background:var(--surface-1)}
+/* buttons with the site's own icon */
+.btn,.btn2{display:flex;align-items:center;justify-content:center;gap:9px}
+.ico{width:20px;height:20px;border-radius:5px;background:#fff;object-fit:contain;flex:none}
+
 /* toast */
 .toast{position:fixed;left:50%;bottom:calc(86px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(10px);opacity:0;z-index:20;
   background:var(--text-primary);color:var(--bg);padding:10px 16px;border-radius:999px;font-size:14px;font-weight:600;transition:opacity .2s,transform .2s;pointer-events:none}
@@ -578,10 +598,64 @@ function card(x, showGender) {
     toast(t(on ? "added" : "removed"));
   };
   c.append(s);
+  paint(c, x.c);
   c.tabIndex = 0; c.onclick = () => openSheet(x);
   c.onkeydown = e => { if (e.key === "Enter") openSheet(x); };
   return c;
 }
+// ---- product colour -> glow + accent (from the bottle colour computed by the daily run)
+function isDark() { return theme === "dark" || (theme === "auto" && matchMedia("(prefers-color-scheme: dark)").matches); }
+function hexToHsl(hex) {
+  const n = parseInt(hex.slice(1), 16), r = (n >> 16 & 255) / 255, g = (n >> 8 & 255) / 255, b = (n & 255) / 255;
+  const mx = Math.max(r, g, b), mn = Math.min(r, g, b), l = (mx + mn) / 2, d = mx - mn;
+  let h = 0, s = 0;
+  if (d) { s = d / (1 - Math.abs(2 * l - 1)); h = mx === r ? ((g - b) / d) % 6 : mx === g ? (b - r) / d + 2 : (r - g) / d + 4; h = (h * 60 + 360) % 360; }
+  return [h, s * 100, l * 100];
+}
+function paint(node, hex) {
+  ["--pglow", "--accent"].forEach(v => node.style.removeProperty(v));
+  if (!hex) return;
+  const [h, s] = hexToHsl(hex), dark = isDark();
+  if (s < 18) {                                   // black / grey / clear bottle: a silver glow
+    node.style.setProperty("--pglow", dark ? "hsla(240,8%,78%,.30)" : "hsla(240,6%,45%,.22)");
+    return;
+  }
+  const sat = Math.min(Math.max(s, 45), 80);
+  node.style.setProperty("--pglow", `hsla(${h},${sat}%,${dark ? 62 : 58}%,${dark ? .42 : .45})`);
+  node.style.setProperty("--accent", `hsl(${h},${sat}%,${dark ? 66 : 38}%)`);
+}
+
+// ---- small pictures for fragrance notes
+const NOTE_ICONS = [
+  [/rose/i, "🌹"], [/lavand|lavender/i, "💜"], [/tonka|fève/i, "🌰"], [/vanill/i, "🍦"],
+  [/caf[eé]|coffee|espresso/i, "☕"], [/cacao|chocolat|cocoa/i, "🍫"],
+  [/rhum|rum|cognac|whisk|liqueur|vin\b|wine|gin\b/i, "🥃"], [/tabac|tobacco/i, "🍂"], [/cuir|leather|daim|su[eè]de/i, "👜"],
+  [/miel|honey|caramel|pralin|sucre|sugar|amande|almond|noisette|hazelnut|réglisse|licorice|gourmand/i, "🍯"],
+  [/bergam|citron|lemon|mandarin|orange|pamplemousse|grapefruit|yuzu|lime|agrume|citrus|n[eé]roli|petitgrain|bigarad|cédrat/i, "🍋"],
+  [/pomme|apple|poire|pear|p[eê]che|peach|prune|plum|cassis|currant|framboise|raspberr|fraise|strawberr|cerise|cherr|ananas|pineapple|figu|fig\b|mangue|mango|fruit|baie|berr|litchi|lychee|coco|melon|abricot|apricot|grenade|pomegranate/i, "🍑"],
+  [/poivre|pepper|cannelle|cinnamon|cardamom|muscade|nutmeg|gingembre|ginger|[eé]pic|spic|safran|saffron|girofle|clove|piment|cumin|anis/i, "🌶️"],
+  [/marin|aquati|sel\b|salt|oc[eé]an|\bmer\b|sea|algue|ozon|eau\b|water|calone/i, "🌊"],
+  [/menthe|mint|basilic|basil|sauge|sage|romarin|rosemary|thym|herb|feuille|leaf|vert|green|galbanum|th[eé]\b|tea|foug[eè]re|fern|lentisque|armoise|estragon|tarragon|violette feuille/i, "🌿"],
+  [/jasmin|fleur|flower|tub[eé]reuse|tuberose|iris|violette|violet|pivoine|peony|lys|lily|muguet|magnolia|ylang|gard[eé]nia|frangipan|orchid|h[eé]liotrope|mimosa|osmanthus|freesia|lotus|g[eé]ranium|floral/i, "🌸"],
+  [/musc|musk/i, "☁️"],
+  [/ambre|amber|ambrox|ambrette|benjoin|benzoin|encens|incense|oliban|r[eé]sin|myrrh|labdanum|[eé]l[eé]mi|opopanax/i, "✨"],
+  [/c[eè]dre|cedar|bois|wood|santal|sandal|v[eé]tiver|patchouli|ga[iï]ac|oud|agar|cachemire|cashmere|bouleau|birch|cypr|pin\b|pine|sapin|fir\b|mousse|moss|ch[eê]ne|oak/i, "🪵"],
+];
+const noteIcon = name => (NOTE_ICONS.find(([re]) => re.test(name)) || [null, "🌱"])[1];
+function noteChips(text) {
+  const box = el("div", "ingr");
+  text.split(/,|;|\bet\b|\band\b/).map(x => x.trim().replace(/\.$/, "")).filter(Boolean).forEach(name => {
+    const chip = el("span", "ing"); chip.append(el("i", null, noteIcon(name)), document.createTextNode(name)); box.append(chip);
+  });
+  return box;
+}
+// ---- the official little icon of a site, loaded from that site (hidden if it fails)
+function siteIcon(domain) {
+  const img = el("img", "ico"); img.alt = ""; img.loading = "lazy";
+  img.src = "https://www.google.com/s2/favicons?domain=" + domain + "&sz=64";
+  img.onerror = () => img.remove(); return img;
+}
+
 let toastTimer;
 function toast(msg) {
   let tEl = $("#toast"); if (!tEl) { tEl = el("div", "toast"); tEl.id = "toast"; tEl.setAttribute("role", "status"); document.body.append(tEl); }
@@ -608,6 +682,7 @@ async function renderHome() {
              el("div", "fname", x.n), el("div", "fkind", x.b + ", " + x.k + (x.sz ? ", " + x.sz : "")));
     const pr = el("div", "fprice"); pr.append(el("span", "price", dh(x.p))); if (x.o) pr.append(el("span", "old", dh(x.o)));
     f.append(pr, el("span", "cta", t("see_perfume")));
+    paint(f, x.c);
     f.onclick = () => openSheet(x); f.onkeydown = e => { if (e.key === "Enter") openSheet(x); };
     v.append(f);
   }
@@ -796,6 +871,7 @@ $("#infoBtn").onclick = openAbout;
 
 async function openSheet(x) {
   const s = openPanel("p=" + x.g + "/" + x.h);
+  paint(s, x.c);
   const hero = el("div", "d-hero"), bottle = el("div", "bottle");
   if (x.i) { const img = el("img"); img.src = x.i; img.alt = x.b + " " + x.n; bottle.append(img); }
   hero.append(bottle, el("div", "name", x.n), el("div", "brand", x.b + ", " + t(x.g)), el("div", "kind", x.k));
@@ -833,13 +909,13 @@ async function openSheet(x) {
   const shareUrl = SITE.base + "p/" + x.g + "/" + x.h + ".html";
   const shareText = t("share_txt", { name: x.b + " " + x.n + " " + x.k + (x.sz ? " " + x.sz : ""), p: dh(x.p),
                                      disc: x.s ? t("share_disc", { d: x.d }) : "", url: shareUrl });
-  const sh = el("button", "btn share", t("share"));
+  const sh = el("button", "btn share"); sh.append(siteIcon("whatsapp.com"), document.createTextNode(t("share")));
   sh.onclick = async () => {
     if (navigator.share) { try { await navigator.share({ title: x.b + " " + x.n, text: shareText }); return; } catch (e) { if (e.name === "AbortError") return; } }
     open("https://wa.me/?text=" + encodeURIComponent(shareText), "_blank", "noopener");
   };
-  const a = el("a", "btn2", t("open_k")); a.href = x.l; a.target = "_blank"; a.rel = "noopener";
-  const fr = el("a", "btn2", t("frag")); fr.target = "_blank"; fr.rel = "noopener";
+  const a = el("a", "btn2"); a.append(siteIcon("kosmenia.ma"), document.createTextNode(t("open_k"))); a.href = x.l; a.target = "_blank"; a.rel = "noopener";
+  const fr = el("a", "btn2"); fr.append(siteIcon("fragrantica.com"), document.createTextNode(t("frag"))); fr.target = "_blank"; fr.rel = "noopener";
   fr.href = "https://www.fragrantica.com/search/?query=" + encodeURIComponent(x.b + " " + x.n);
   const wb = el("button", "btn2", isWatched(x) ? t("w_rem") : t("w_add"));
   wb.onclick = () => { toggleWatch(x); wb.textContent = isWatched(x) ? t("w_rem") : t("w_add"); renderDeals(); };
@@ -850,11 +926,9 @@ async function openSheet(x) {
   const n = D.notes || {};
   if (n.top || n.heart || n.base) {
     notesBox.append(el("h3", null, t("notes_t")));
-    const g = el("div", "notes");
     for (const [k, lab] of [["top", "n_top"], ["heart", "n_heart"], ["base", "n_base"]]) {
-      if (n[k]) { const d = el("div", "note"); d.append(el("b", null, t(lab)), document.createTextNode(n[k])); g.append(d); }
+      if (n[k]) { const row = el("div", "note-row"); row.append(el("b", null, t(lab)), noteChips(n[k])); notesBox.append(row); }
     }
-    notesBox.append(g);
   }
   if (D.desc) notesBox.append(el("h3", null, t("desc_t")), el("div", "desc", D.desc));
   if (!(n.top || n.heart || n.base)) notesBox.append(el("div", "sub", t("no_notes")));
@@ -941,6 +1015,8 @@ async function openFromHash() {
     catch {}
   } else if (location.hash === "#about") { history.replaceState(null, "", location.pathname + location.search); openAbout(); }
 }
+
+addEventListener("hashchange", openFromHash);   // a share link opened while the site is already open
 
 // ---------------- offline + analytics ----------------
 const net = () => $("#offline").style.display = navigator.onLine ? "none" : "block";
