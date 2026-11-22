@@ -1,0 +1,64 @@
+# Famous men's perfumes, most famous first (Fragrantica-style popularity).
+# One perfume per line. A product matches when ALL words of the line appear in
+# its name/URL. Use | for alternatives:  bad boy | badboy
+# Edit freely: move lines up/down to change the ranking, add or delete lines.
+dior sauvage
+bleu de chanel
+acqua di gio
+stronger with you
+le male
+rabanne million
+invictus
+versace eros
+laurent y
+nuit lhomme
+terre dhermes
+gabbana the one
+light blue
+dior homme
+allure homme
+armani code
+boss bottled
+spicebomb
+oud wood
+noir extreme
+ombre leather
+club nuit intense
+azzaro wanted
+gaultier le beau
+born roma
+lhomme ideal
+khamrah
+lattafa asad
+afnan
+cool water
+givenchy gentleman
+myslf
+gaultier scandal
+bad boy | badboy
+212
+fahrenheit
+encre noire
+kouros
+phantom
+montblanc legend
+montblanc explorer
+luna rossa
+gucci guilty
+layton
+fireplace
+eau sauvage
+man black
+aqva
+declaration
+habit rouge
+boss scent
+only brave
+cedrat boise
+instant crush
+ck one
+polo blue
+lhomme prada
+hermes h24
+black orchid
+drakkar
