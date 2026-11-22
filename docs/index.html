@@ -282,6 +282,7 @@ h1{font-family:var(--serif);font-weight:700;font-size:28px;letter-spacing:.2px}
 .btn,.btn2{display:flex;align-items:center;justify-content:center;gap:9px}
 .ico{width:20px;height:20px;border-radius:5px;background:#fff;object-fit:contain;flex:none}
 
+.famchip{margin-top:10px;border:1px solid var(--accent);color:var(--accent);background:transparent;border-radius:999px;padding:5px 12px;font-size:13px;font-weight:600;cursor:pointer}
 /* toast */
 .toast{position:fixed;left:50%;bottom:calc(86px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(10px);opacity:0;z-index:20;
   background:var(--text-primary);color:var(--bg);padding:10px 16px;border-radius:999px;font-size:14px;font-weight:600;transition:opacity .2s,transform .2s;pointer-events:none}
@@ -315,6 +316,7 @@ h1{font-family:var(--serif);font-weight:700;font-size:28px;letter-spacing:.2px}
       <select id="mind"></select>
       <select id="sort"></select>
     </div>
+    <div class="row"><select id="fam"></select></div>
     <div class="count" id="count"></div>
     <div id="list"></div>
   </section>
@@ -400,7 +402,8 @@ const T = {
     not_sale: "Pas en promo", save_x: "économie {p}", per100_l: "Prix au 100 ml", lowest_seen: "Prix le plus bas vu",
     fame_rank: "Classement célébrité", sales_rank: "Classement ventes Kosmenia", history: "Historique du prix",
     no_hist: "Pas encore d'historique.", table: "Voir le tableau des prix", th: ["Date", "Prix", "Avant"],
-    notes_t: "Notes olfactives", n_top: "Notes de tête", n_heart: "Notes de cœur", n_base: "Notes de fond",
+    notes_t: "Notes olfactives", n_top: "Notes de tête", n_heart: "Notes de cœur", n_base: "Notes de fond", n_main: "Notes principales",
+    all_fams: "Toutes les familles olfactives", family: "Famille olfactive",
     desc_t: "Description", no_notes: "Notes non indiquées par Kosmenia - voir Fragrantica.",
     open_k: "Voir sur Kosmenia", frag: "Rechercher sur Fragrantica", share: "Partager sur WhatsApp",
     w_add: "☆ Ajouter aux favoris", w_rem: "★ Retirer des favoris", close: "Fermer",
@@ -452,7 +455,8 @@ const T = {
     not_sale: "Not on sale", save_x: "save {p}", per100_l: "Price per 100 ml", lowest_seen: "Lowest price seen",
     fame_rank: "Fame rank", sales_rank: "Kosmenia sales rank", history: "Price history",
     no_hist: "No history yet.", table: "Show the price table", th: ["Date", "Price", "Was"],
-    notes_t: "Fragrance notes", n_top: "Top notes", n_heart: "Heart notes", n_base: "Base notes",
+    notes_t: "Fragrance notes", n_top: "Top notes", n_heart: "Heart notes", n_base: "Base notes", n_main: "Key notes",
+    all_fams: "All scent families", family: "Scent family",
     desc_t: "Description", no_notes: "Notes not listed by Kosmenia - see Fragrantica.",
     open_k: "Open on Kosmenia", frag: "Search on Fragrantica", share: "Share on WhatsApp",
     w_add: "☆ Add to watchlist", w_rem: "★ Remove from watchlist", close: "Close",
@@ -544,7 +548,7 @@ async function loadFileWatch() {
   } catch {}
 }
 
-const state = { q: "", sale: true, famous: false, isnew: false, low: false, notes: false, stock: true, brand: "", mind: 0, sort: "fame", limit: 60 };
+const state = { fam: "", q: "", sale: true, famous: false, isnew: false, low: false, notes: false, stock: true, brand: "", mind: 0, sort: "fame", limit: 60 };
 const CHIPS = [["sale", "c_sale"], ["famous", "c_famous"], ["isnew", "c_new"], ["low", "c_low"], ["notes", "c_notes"], ["stock", "c_stock"]];
 
 function setUpdated(d, n) { $("#updated").textContent = d ? t("updated", { d: fmtDate(d) }) + (n != null ? " · " + t("deals_n", { n }) : "") : ""; }
@@ -557,7 +561,10 @@ async function selectGender(g) {
     if (currentView !== "home") setUpdated(data.updated, data.items.filter(x => x.s).length);
     const sel = $("#brand"); sel.replaceChildren(new Option(t("all_brands"), ""));
     [...new Set(data.items.map(x => x.b).filter(Boolean))].sort((a, b) => a.localeCompare(b)).forEach(b => sel.append(new Option(b, b)));
-    state.brand = ""; state.limit = 60;
+    const fams = {}; data.items.forEach(x => { const f = famMain(x.fm); if (f) fams[f] = (fams[f] || 0) + 1; });
+    const fsel = $("#fam"); fsel.replaceChildren(new Option(t("all_fams"), ""));
+    Object.entries(fams).sort((a, b) => b[1] - a[1]).forEach(([f, n]) => fsel.append(new Option(f + " (" + n + ")", f)));
+    state.brand = ""; state.fam = ""; state.limit = 60;
     renderDeals(); renderStats();
   } catch {
     $("#updated").textContent = t("load_err");
@@ -625,6 +632,15 @@ function paint(node, hex) {
   node.style.setProperty("--accent", `hsl(${h},${sat}%,${dark ? 66 : 38}%)`);
 }
 
+// ---- main scent family (Kosmenia uses ~50 variants; the filter groups them by the first word)
+const FAM_MAIN = { ambre: "Oriental / Ambré", "ambré": "Oriental / Ambré", oriental: "Oriental / Ambré",
+  frais: "Hespéridé / Frais", "hespéridé": "Hespéridé / Frais", hesperide: "Hespéridé / Frais" };
+function famMain(fm) {
+  if (!fm) return "";
+  const w = fm.split(/[\s(/]+/)[0];
+  return FAM_MAIN[fold(w)] || FAM_MAIN[w.toLowerCase()] || (w[0].toUpperCase() + w.slice(1).toLowerCase());
+}
+
 // ---- small pictures for fragrance notes
 const NOTE_ICONS = [
   [/rose/i, "🌹"], [/lavand|lavender/i, "💜"], [/tonka|fève/i, "🌰"], [/vanill/i, "🍦"],
@@ -633,7 +649,7 @@ const NOTE_ICONS = [
   [/miel|honey|caramel|pralin|sucre|sugar|amande|almond|noisette|hazelnut|réglisse|licorice|gourmand/i, "🍯"],
   [/bergam|citron|lemon|mandarin|orange|pamplemousse|grapefruit|yuzu|lime|agrume|citrus|n[eé]roli|petitgrain|bigarad|cédrat/i, "🍋"],
   [/pomme|apple|poire|pear|p[eê]che|peach|prune|plum|cassis|currant|framboise|raspberr|fraise|strawberr|cerise|cherr|ananas|pineapple|figu|fig\b|mangue|mango|fruit|baie|berr|litchi|lychee|coco|melon|abricot|apricot|grenade|pomegranate/i, "🍑"],
-  [/poivre|pepper|cannelle|cinnamon|cardamom|muscade|nutmeg|gingembre|ginger|[eé]pic|spic|safran|saffron|girofle|clove|piment|cumin|anis/i, "🌶️"],
+  [/poivre|pepper|cannelle|cinnamon|cardamom|muscade|nutmeg|gingembre|ginger|[eé]pic|spic|safran|saffron|girofle|clove|piment|cumin|anis|coriandre|coriander|geni[eè]vre|juniper/i, "🌶️"],
   [/marin|aquati|sel\b|salt|oc[eé]an|\bmer\b|sea|algue|ozon|eau\b|water|calone/i, "🌊"],
   [/menthe|mint|basilic|basil|sauge|sage|romarin|rosemary|thym|herb|feuille|leaf|vert|green|galbanum|th[eé]\b|tea|foug[eè]re|fern|lentisque|armoise|estragon|tarragon|violette feuille/i, "🌿"],
   [/jasmin|fleur|flower|tub[eé]reuse|tuberose|iris|violette|violet|pivoine|peony|lys|lily|muguet|magnolia|ylang|gard[eé]nia|frangipan|orchid|h[eé]liotrope|mimosa|osmanthus|freesia|lotus|g[eé]ranium|floral/i, "🌸"],
@@ -731,6 +747,7 @@ function filtered() {
   return data.items.filter(x =>
     (!state.sale || x.s) && (!state.stock || x.st) && (!state.famous || x.f != null) && (!state.isnew || x.nw) &&
     (!state.low || x.atLow) && (!state.notes || x.nt) && (!state.brand || x.b === state.brand) && x.d >= state.mind &&
+    (!state.fam || famMain(x.fm) === state.fam) &&
     (!q || q.split(/\s+/).every(w => x.hay.includes(w)))
   ).sort(SORTS[state.sort]);
 }
@@ -750,6 +767,7 @@ $("#q").oninput = e => { state.q = e.target.value; state.limit = 60; renderDeals
 $("#brand").onchange = e => { state.brand = e.target.value; state.limit = 60; renderDeals(); };
 $("#mind").onchange = e => { state.mind = +e.target.value; state.limit = 60; renderDeals(); };
 $("#sort").onchange = e => { state.sort = e.target.value; state.limit = 60; renderDeals(); };
+$("#fam").onchange = e => { state.fam = e.target.value; state.limit = 60; renderDeals(); };
 
 // ---------------- watchlist ----------------
 function toggleWatch(x) {
@@ -875,6 +893,9 @@ async function openSheet(x) {
   const hero = el("div", "d-hero"), bottle = el("div", "bottle");
   if (x.i) { const img = el("img"); img.src = x.i; img.alt = x.b + " " + x.n; bottle.append(img); }
   hero.append(bottle, el("div", "name", x.n), el("div", "brand", x.b + ", " + t(x.g)), el("div", "kind", x.k));
+  if (x.fm) { const f = el("button", "famchip", x.fm); f.title = t("family");
+    f.onclick = () => { closeSheet(); go("deals"); selectGender(x.g).then(() => { state.fam = famMain(x.fm); $("#fam").value = state.fam; renderDeals(); }); };
+    hero.append(f); }
   s.append(hero);
 
   let current = Math.max(0, x.v.findIndex(v => v[V.size] === x.sz));
@@ -924,14 +945,14 @@ async function openSheet(x) {
   const D = (await lazy(DETAILS, "details", x.g))[x.h] || {};
   notesBox.replaceChildren();
   const n = D.notes || {};
-  if (n.top || n.heart || n.base) {
+  if (n.top || n.heart || n.base || n.main) {
     notesBox.append(el("h3", null, t("notes_t")));
-    for (const [k, lab] of [["top", "n_top"], ["heart", "n_heart"], ["base", "n_base"]]) {
+    for (const [k, lab] of [["top", "n_top"], ["heart", "n_heart"], ["base", "n_base"], ["main", "n_main"]]) {
       if (n[k]) { const row = el("div", "note-row"); row.append(el("b", null, t(lab)), noteChips(n[k])); notesBox.append(row); }
     }
   }
   if (D.desc) notesBox.append(el("h3", null, t("desc_t")), el("div", "desc", D.desc));
-  if (!(n.top || n.heart || n.base)) notesBox.append(el("div", "sub", t("no_notes")));
+  if (!(n.top || n.heart || n.base || n.main)) notesBox.append(el("div", "sub", t("no_notes")));
 }
 
 function drawChart(box, pts, updated) {
