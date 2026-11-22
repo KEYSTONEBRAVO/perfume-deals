@@ -12,10 +12,13 @@
 <meta property="og:image" content="https://keystonebravo.github.io/perfume-deals/og.png">
 <meta property="og:url" content="https://keystonebravo.github.io/perfume-deals/">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#111214">
+<meta name="theme-color" content="#17131f">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Promos Parfums">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
@@ -166,6 +169,104 @@ nav button{max-width:190px}
 .about p,.about li{font-size:14px;color:var(--text-secondary);line-height:1.5}
 .about ul{padding-left:18px;margin:6px 0}
 .share{background:#25d366;color:#fff}
+
+/* ================= design: "le flacon" ================= */
+:root{
+  --bg:#17131f; --surface-1:#211b2b; --surface-2:#2b2437; --line:#3a3247;
+  --text-primary:#f3eff7; --text-secondary:#c9c0d6; --text-muted:#948aa6;
+  --series-1:#d9a441; --accent:#d9a441; --sale:#e0577a; --good:#3fb68b; --new:#8c7cf0; --gold:#d9a441;
+  --glow:rgba(217,164,65,.30); --serif:"Cormorant Garamond",Garamond,"Times New Roman",serif;
+}
+@media (prefers-color-scheme: light){
+  :root:where(:not([data-theme="dark"])){
+    --bg:#f7f5f9; --surface-1:#ffffff; --surface-2:#efecf3; --line:#e3dee9;
+    --text-primary:#1e1828; --text-secondary:#5b5268; --text-muted:#857c93;
+    --series-1:#a86f12; --accent:#a86f12; --sale:#c2365b; --good:#1d8a5f; --new:#6a58d8; --gold:#b07a14; --glow:rgba(217,164,65,.38);}
+}
+:root[data-theme="light"]{
+    --bg:#f7f5f9; --surface-1:#ffffff; --surface-2:#efecf3; --line:#e3dee9;
+    --text-primary:#1e1828; --text-secondary:#5b5268; --text-muted:#857c93;
+    --series-1:#a86f12; --accent:#a86f12; --sale:#c2365b; --good:#1d8a5f; --new:#6a58d8; --gold:#b07a14; --glow:rgba(217,164,65,.38);}
+:root[data-theme="dark"]{
+  --bg:#17131f; --surface-1:#211b2b; --surface-2:#2b2437; --line:#3a3247;
+  --text-primary:#f3eff7; --text-secondary:#c9c0d6; --text-muted:#948aa6;
+  --series-1:#d9a441; --accent:#d9a441; --sale:#e0577a; --good:#3fb68b; --new:#8c7cf0; --gold:#d9a441; --glow:rgba(217,164,65,.30);}
+
+h1{font-family:var(--serif);font-weight:700;font-size:28px;letter-spacing:.2px}
+.icon-btn{border-radius:50%}
+.icon-btn:focus-visible,.chip:focus-visible,.card:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.seg button.on{box-shadow:none;border:1px solid var(--line)}
+.chip.on{background:var(--accent);border-color:var(--accent);color:#1b1408}
+
+/* product cards: the bottle on its white label, the name in serif */
+.card{border:1px solid var(--line);background:var(--surface-1);transition:transform .12s}
+.card:active{transform:scale(.99)}
+.card img,.ph{border-radius:12px}
+.brand{text-transform:none;letter-spacing:0;font-size:12.5px;color:var(--text-muted)}
+.name{font-family:var(--serif);font-size:21px;font-weight:600;line-height:1.1;margin:2px 0 1px;
+  white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.price{font-size:17px}
+.tag.sale{background:var(--sale);border-color:var(--sale)}
+.tag.g{border-color:transparent;background:var(--surface-2);color:var(--text-secondary);font-weight:600}
+.star.on{color:var(--gold)}
+.star.pop{animation:pop .35s ease}
+@keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.45)}100%{transform:scale(1)}}
+
+/* section headings: plain serif titles, no boxes */
+.sec{margin:26px 4px 6px}
+.sec h2{font-family:var(--serif);font-size:25px;font-weight:600;margin:0;line-height:1.1}
+.sec p{margin:3px 0 0;font-size:13px;color:var(--text-muted)}
+.panel h2{font-family:var(--serif);font-size:21px;font-weight:600}
+.tile .v{font-family:var(--serif)}
+
+/* home: one bottle, one glow */
+.intro{padding:4px 2px 0}
+.intro h2{font-family:var(--serif);font-size:30px;font-weight:600;line-height:1.05;margin:4px 0 6px;max-width:16ch}
+.intro p{max-width:52ch}
+.flacon{position:relative;margin-top:16px;border-radius:24px;overflow:hidden;cursor:pointer;
+  background:radial-gradient(120% 90% at 50% 0%,var(--surface-2) 0%,var(--surface-1) 70%);border:1px solid var(--line);padding:22px 20px 20px;text-align:center}
+.flacon .halo{position:absolute;left:50%;top:34px;width:260px;height:260px;margin-left:-130px;border-radius:50%;
+  background:radial-gradient(circle,var(--glow) 0%,transparent 68%);filter:blur(6px)}
+.flacon .bottle{position:relative;width:190px;height:190px;margin:0 auto;border-radius:50%;background:#fff;display:grid;place-items:center;
+  box-shadow:0 0 0 1px var(--line),0 18px 40px -16px var(--glow)}
+.flacon .bottle img{width:150px;height:150px;object-fit:contain}
+.flacon .kicker{position:relative;font-size:13px;color:var(--accent);font-weight:700;margin-top:16px}
+.flacon .fname{position:relative;font-family:var(--serif);font-size:34px;font-weight:600;line-height:1.05;margin:4px 0 2px}
+.flacon .fkind{position:relative;font-size:13px;color:var(--text-secondary)}
+.flacon .fprice{position:relative;display:flex;gap:10px;justify-content:center;align-items:baseline;margin-top:10px}
+.flacon .fprice .price{font-size:24px}
+.flacon .fdisc{position:absolute;top:16px;right:16px;background:var(--sale);color:#fff;font-weight:800;border-radius:999px;padding:8px 12px;font-size:17px}
+.flacon .cta{position:relative;display:inline-block;margin-top:14px;padding:10px 18px;border-radius:999px;background:var(--text-primary);color:var(--bg);font-weight:700;font-size:14px}
+@media (prefers-reduced-motion: no-preference){
+  .flacon .bottle{animation:rise .8s cubic-bezier(.2,.7,.2,1) both}
+  .flacon .halo{animation:breathe 2.4s ease-out 1 both}
+}
+@keyframes rise{from{opacity:0;transform:translateY(18px) scale(.96)}to{opacity:1;transform:none}}
+@keyframes breathe{0%{opacity:0;transform:scale(.7)}60%{opacity:1;transform:scale(1.08)}100%{opacity:1;transform:scale(1)}}
+
+/* collections as a row of pills */
+.cols{display:flex;gap:8px;margin-top:14px}
+.cols button{flex:1;border:1px solid var(--line);background:var(--surface-1);border-radius:999px;padding:10px 6px;cursor:pointer;font-size:14px;color:var(--text-secondary)}
+.cols button b{color:var(--text-primary);font-size:16px;margin-left:4px}
+
+/* detail sheet: the bottle gets the stage */
+.sheet{border-top:1px solid var(--line)}
+.d-hero{text-align:center;padding:6px 0 4px}
+.d-hero .bottle{width:170px;height:170px;margin:0 auto;border-radius:50%;background:#fff;display:grid;place-items:center;
+  box-shadow:0 0 0 1px var(--line),0 0 60px 10px var(--glow)}
+.d-hero .bottle img{width:135px;height:135px;object-fit:contain}
+.d-hero .name{font-size:30px;white-space:normal;margin-top:14px}
+.size.on{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.btn{border-radius:999px}
+.btn2{border-radius:999px}
+.share{background:#25d366;color:#0b2e17}
+.note{border-left:3px solid var(--accent)}
+
+/* toast */
+.toast{position:fixed;left:50%;bottom:calc(86px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(10px);opacity:0;z-index:20;
+  background:var(--text-primary);color:var(--bg);padding:10px 16px;border-radius:999px;font-size:14px;font-weight:600;transition:opacity .2s,transform .2s;pointer-events:none}
+.toast.on{opacity:1;transform:translateX(-50%)}
+@media (prefers-reduced-motion: reduce){ *{animation:none!important;transition:none!important} }
 </style>
 </head>
 <body>
@@ -257,6 +358,7 @@ const T = {
     t_notes: "Notes", t_out: "Rupture", t_since: "↓ {p} depuis ⭐",
     w_count: "{a} en promo sur {b} favoris", w_empty: "Touchez ☆ sur un parfum pour le suivre ici. Vos favoris restent sur ce téléphone.",
     today_t: "Promos aujourd'hui", today_s: "Touchez une catégorie pour tout voir",
+    dotd: "Promo du jour", see_perfume: "Voir le parfum", added: "Ajouté aux favoris", removed: "Retiré des favoris",
     hero_t: "Les meilleures promos parfum au Maroc",
     hero_p: "Toutes les promos de Kosmenia, vérifiées chaque matin : chaque taille, le prix au 100 ml et l'historique des prix.",
     top_t: "Top promos du jour", top_s: "Les plus grosses remises sur les parfums célèbres",
@@ -308,6 +410,7 @@ const T = {
     t_notes: "Notes", t_out: "Sold out", t_since: "↓ {p} since ⭐",
     w_count: "{a} on sale out of {b} in your watchlist", w_empty: "Tap ☆ on a perfume to follow it here. Your watchlist stays on this phone.",
     today_t: "Deals today", today_s: "Tap a collection to see them all",
+    dotd: "Deal of the day", see_perfume: "See the perfume", added: "Added to watchlist", removed: "Removed from watchlist",
     hero_t: "The best perfume deals in Morocco",
     hero_p: "Every Kosmenia promotion, checked every morning: each size, the price per 100 ml and the price history.",
     top_t: "Top deals today", top_s: "Biggest discounts on famous perfumes",
@@ -449,7 +552,7 @@ function card(x, showGender) {
   const c = el("div", "card");
   if (x.i) { const img = el("img"); img.src = x.i; img.loading = "lazy"; img.alt = ""; c.append(img); } else c.append(el("div", "ph"));
   const b = el("div", "body");
-  b.append(el("div", "brand", x.b + (showGender ? " · " + t(x.g) : "")), el("div", "name", x.n), el("div", "kind", x.k + (x.sz ? " · " + x.sz : "")));
+  b.append(el("div", "brand", x.b), el("div", "name", x.n), el("div", "kind", x.k + (x.sz ? ", " + x.sz : "")));
   const pr = el("div", "prices"); pr.append(el("span", "price", dh(x.p)));
   if (x.o) pr.append(el("span", "old", dh(x.o)));
   if (x.pm) pr.append(el("span", "per", t("per100", { p: dh(x.pm) })));
@@ -462,16 +565,29 @@ function card(x, showGender) {
   else if (x.r && x.r <= 100) tags.append(el("span", "tag", t("t_best", { n: x.r })));
   if (x.nt) tags.append(el("span", "tag", t("t_notes")));
   if (!x.st) tags.append(el("span", "tag out", t("t_out")));
+  if (showGender) tags.append(el("span", "tag g", t(x.g)));
   const w = watch[x.key];
   if (w && w.p && x.p < w.p) tags.append(el("span", "tag low", t("t_since", { p: dh(w.p - x.p) })));
   b.append(tags); c.append(b);
   const s = el("button", "star" + (isWatched(x) ? " on" : ""), isWatched(x) ? "★" : "☆");
   s.setAttribute("aria-label", t("nav_watch"));
-  s.onclick = e => { e.stopPropagation(); toggleWatch(x); s.classList.toggle("on", isWatched(x)); s.textContent = isWatched(x) ? "★" : "☆"; };
+  s.onclick = e => {
+    e.stopPropagation(); toggleWatch(x); const on = isWatched(x);
+    s.classList.toggle("on", on); s.textContent = on ? "★" : "☆";
+    s.classList.remove("pop"); void s.offsetWidth; s.classList.add("pop");
+    toast(t(on ? "added" : "removed"));
+  };
   c.append(s);
-  c.onclick = () => openSheet(x);
+  c.tabIndex = 0; c.onclick = () => openSheet(x);
+  c.onkeydown = e => { if (e.key === "Enter") openSheet(x); };
   return c;
 }
+let toastTimer;
+function toast(msg) {
+  let tEl = $("#toast"); if (!tEl) { tEl = el("div", "toast"); tEl.id = "toast"; tEl.setAttribute("role", "status"); document.body.append(tEl); }
+  tEl.textContent = msg; tEl.classList.add("on"); clearTimeout(toastTimer); toastTimer = setTimeout(() => tEl.classList.remove("on"), 1800);
+}
+function section(title, sub) { const d = el("div", "sec"); d.append(el("h2", null, title)); if (sub) d.append(el("p", null, sub)); return d; }
 
 // ---------------- home ----------------
 async function renderHome() {
@@ -480,29 +596,40 @@ async function renderHome() {
   try { H = await loadHome(); } catch { v.replaceChildren(el("div", "empty", t("no_data"))); return; }
   v.replaceChildren();
   if (currentView === "home") setUpdated(H.updated);
-  const hero = el("div", "intro"); hero.append(el("h2", null, t("hero_t")), el("p", null, t("hero_p"))); v.append(hero);
-  const today = el("div", "panel"); today.append(el("h2", null, t("today_t")), el("div", "sub", t("today_s"))); v.append(today);
-  const tiles = el("div", "tiles3");
+  const intro = el("div", "intro"); intro.append(el("h2", null, t("hero_t")), el("p", null, t("hero_p"))); v.append(intro);
+
+  // the one memorable moment: today's best deal, the bottle in a glow
+  const x = H.top[0];
+  if (x) {
+    const f = el("div", "flacon"); f.tabIndex = 0; f.setAttribute("role", "button");
+    const halo = el("div", "halo"), bottle = el("div", "bottle");
+    if (x.i) { const img = el("img"); img.src = x.i; img.alt = x.b + " " + x.n; bottle.append(img); }
+    f.append(halo, bottle, el("div", "fdisc", "-" + x.d + " %"), el("div", "kicker", t("dotd")),
+             el("div", "fname", x.n), el("div", "fkind", x.b + ", " + x.k + (x.sz ? ", " + x.sz : "")));
+    const pr = el("div", "fprice"); pr.append(el("span", "price", dh(x.p))); if (x.o) pr.append(el("span", "old", dh(x.o)));
+    f.append(pr, el("span", "cta", t("see_perfume")));
+    f.onclick = () => openSheet(x); f.onkeydown = e => { if (e.key === "Enter") openSheet(x); };
+    v.append(f);
+  }
+
+  const cols = el("div", "cols");
   for (const g of ["men", "women", "unisex"]) {
-    const tl = el("div", "tile"); tl.append(el("div", "v", String(H.counts[g] ?? 0)), el("div", "l", t(g)));
-    tl.onclick = () => { go("deals"); selectGender(g); }; tiles.append(tl);
+    const btn = el("button"); btn.append(document.createTextNode(t(g)), el("b", null, String(H.counts[g] ?? 0)));
+    btn.onclick = () => { go("deals"); selectGender(g); }; cols.append(btn);
   }
-  v.append(tiles);
-  const p1 = el("div", "panel"); p1.append(el("h2", null, t("top_t")), el("div", "sub", t("top_s"))); v.append(p1);
-  H.top.forEach(x => v.append(card(x, true)));
-  if (H.new.length) {
-    const p2 = el("div", "panel"); p2.append(el("h2", null, t("new_t")), el("div", "sub", t("new_s"))); v.append(p2);
-    H.new.forEach(x => v.append(card(x, true)));
-  }
-  const lg = el("div", "panel"); lg.append(el("h2", null, t("legend_t")));
+  v.append(section(t("today_t"), t("today_s")), cols);
+
+  v.append(section(t("top_t"), t("top_s")));
+  H.top.slice(1).forEach(x => v.append(card(x, true)));
+  if (H.new.length) { v.append(section(t("new_t"), t("new_s"))); H.new.forEach(x => v.append(card(x, true))); }
+
+  v.append(section(t("legend_t")));
   const L = el("div", "legend");
   for (const [cls, txt, desc] of [["tag sale", "-10 %", "l_sale"], ["tag new", t("t_new"), "l_new"], ["tag low", t("t_low"), "l_low"],
                                   ["tag", t("t_famous", { n: 1 }), "l_famous"], ["tag", t("t_best", { n: 5 }), "l_best"]]) {
     const r = el("div"); r.append(el("span", cls, txt), document.createTextNode(t(desc))); L.append(r);
   }
-  lg.append(L); v.append(lg);
-  const tip = el("div", "disclaimer", t("install")); v.append(tip);
-  const disc = el("div", "disclaimer", t("disclaimer")); v.append(disc);
+  v.append(L, el("div", "disclaimer", t("install")), el("div", "disclaimer", t("disclaimer")));
 }
 
 // ---------------- deals ----------------
@@ -669,11 +796,10 @@ $("#infoBtn").onclick = openAbout;
 
 async function openSheet(x) {
   const s = openPanel("p=" + x.g + "/" + x.h);
-  const hero = el("div", "hero"); hero.style.display = "flex"; hero.style.gap = "14px"; hero.style.alignItems = "center";
-  if (x.i) { const img = el("img"); img.src = x.i; img.alt = ""; img.style.cssText = "width:110px;height:110px;object-fit:contain;background:#fff;border-radius:12px"; hero.append(img); }
-  const tt = el("div"); tt.append(el("div", "brand", x.b + " · " + t(x.g)), el("div", "name", x.n), el("div", "kind", x.k));
-  tt.querySelector(".name").style.whiteSpace = "normal";
-  hero.append(tt); s.append(hero);
+  const hero = el("div", "d-hero"), bottle = el("div", "bottle");
+  if (x.i) { const img = el("img"); img.src = x.i; img.alt = x.b + " " + x.n; bottle.append(img); }
+  hero.append(bottle, el("div", "name", x.n), el("div", "brand", x.b + ", " + t(x.g)), el("div", "kind", x.k));
+  s.append(hero);
 
   let current = Math.max(0, x.v.findIndex(v => v[V.size] === x.sz));
   const sizeBox = el("div", "sizes"), facts = el("div", "facts"), chartBox = el("div", "chart"), notesBox = el("div");
