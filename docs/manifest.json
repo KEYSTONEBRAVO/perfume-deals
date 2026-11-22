@@ -1,6 +1,6 @@
 {
- "name": "Perfume deals",
- "short_name": "Perfumes",
+ "name": "Promos Parfums",
+ "short_name": "Promos Parfums",
  "start_url": ".",
  "scope": ".",
  "display": "standalone",

@@ -1,6 +1,6 @@
 // Offline support: the app shell is cached; data is fetched fresh when online
 // and the last copy is used when offline.
-const CACHE = "perfume-deals-v2";
+const CACHE = "perfume-deals-v3";
 const SHELL = ["./", "index.html", "manifest.json", "icon-192.png", "icon-512.png"];
 
 self.addEventListener("install", e => {
