@@ -5,7 +5,7 @@ A small personal project that tracks men's perfume promotions on [Kosmenia](http
 - 📱 publishes a **phone web app** with every deal, price history and a watchlist
 - 📧 sends a **daily email** with the famous perfumes on sale and a full Excel list
 
-**Open the app:** https://bouzriadnane.github.io/perfume-deals/
+**Open the app:** https://keystonebravo.github.io/perfume-deals/
 
 ---
 
